@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS 재고 관리</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <header>
+        <h1>POS 재고 관리 시스템</h1>
+    </header>
+
+    <section>
+        <h2>재고 목록</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>상품명</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th>총액</th>
+                    <th>동작</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% products.forEach(product => { %>
+                    <tr>
+                      <td><%= product.ID %></td>
+                      <td><%= product.name %></td>
+                      <td><%= product.price %></td>
+                      <td><%= product.counts %></td>
+                      <td><%= product.price*product.counts %></td>
+                      <td><button>수정</button> <button>삭제</button></td>
+                    </tr>
+                  <% }); %>
+            </tbody>
+        </table>
+        <button onclick="openModal('inventoryModal')">재고 추가</button>
+        <button onclick="openModal('saleModal')">세일 추가</button>
+
+        <!-- 모달 창 -->
+        <div id="inventoryModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('inventoryModal')">&times;</span>
+                <h2>재고 추가</h2>
+                <!-- 재고 추가 폼 또는 내용을 입력할 부분 -->
+                <form>
+                  <div style="margin-bottom: 15px;">
+                    <label for="productID">ID:</label>
+                    <input type="text" id="productID" name="productID" required>
+                  </div>
+                  <div style="margin-bottom: 15px;">
+                    <label for="productName">상품명:</label>
+                    <input type="text" id="productName" name="productName" required>
+                  </div>
+                  <div style="margin-bottom: 15px;">  
+                    <label for="productPrice">가격:</label>
+                    <input type="number" id="productPrice" name="productPrice" required>
+                  </div>
+                  <div style="margin-bottom: 15px;">
+                    <label for="productQuantity">수량:</label>
+                    <input type="number" id="productQuantity" name="productQuantity" required>
+                  </div>
+                  <div style="text-align: right;">
+                    <button type="button" onclick="addInventory()">추가</button>
+                  </div>
+                </form>
+            </div>
+        </div>
+        <div id="saleModal" class="modal">
+          <div class="modal-content">
+              <span class="close" onclick="closeModal('saleModal')">&times;</span>
+              <h2>세일 추가</h2>
+              <!-- 세일 추가 폼 또는 내용을 입력할 부분 -->
+              <form>
+                <div style="margin-bottom: 15px;">
+                  <label for="saleProductID">ID:</label>
+                  <input type="text" id="saleProductID" name="saleProductID" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                  <label for="saleDiscount">할인율(%):</label>
+                  <input type="number" id="saleDiscount" name="saleDiscount" required>
+                </div>
+                <div style="text-align: right;">
+                  <button type="button" onclick="addSale()">추가</button>
+                </div>
+              </form>
+          </div>
+        </div>
+    </section>
+
+    <script>
+      
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+        window.location.reload();
+    }
+
+    // 모달 외부 클릭 시 모달 닫기
+    window.onclick = function(event) {
+        var inventoryModal = document.getElementById('inventoryModal');
+        var saleModal = document.getElementById('saleModal');
+        if (event.target == inventoryModal) {
+            inventoryModal.style.display = 'none';
+        } 
+        else if (event.target == saleModal) {
+            saleModal.style.display = 'none';
+        }
+    }
+
+    function addInventory() {
+      // 여기에 제품을 추가하는 JavaScript 로직을 추가할 수 있습니다.
+      $.ajax({
+      type: 'POST',
+      url: '/products',
+      data: {
+        "ID" : $('#productID').val(),
+        "name" : $('#productName').val(),
+        "price" : $('#productPrice').val(),
+        "counts" : $('#productQuantity').val()
+      },
+      dataType: "json"
+      }).done((result)=>{
+      console.log(result);
+      console.log(result.message);
+      alert('제품이 추가되었습니다.');
+      closeModal('inventoryModal');
+    })
+      
+    }
+    
+    function addSale() {
+      // 여기에 세일을 추가하는 JavaScript 로직을 추가할 수 있습니다.
+      alert('세일이 추가되었습니다.');
+      closeModal('saleModal');
+    }
+    </script>
+</body>
+</html>
