@@ -11,7 +11,7 @@ const port = 8000;
 app.use(bodyParser.json());
 
 app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlencode
-app.usef(express.json()); // application/json
+app.use(express.json()); // application/json
 // app.use(express.static("./Views/lib"));
 app.use(express.static(path.join(__dirname, 'Views')));
 
