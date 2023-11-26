@@ -7,3 +7,6 @@
 ```
    node index.js
 ```
+## 브라우저에서..
+(http://localhost:8000/) - 메인
+(http://localhost:8000/business) - 영업관리
