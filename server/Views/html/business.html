@@ -154,29 +154,6 @@
     <section>
         <h2>재고 목록</h2>
 
-        <!-- <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>상품명</th>
-                    <th>가격</th>
-                    <th>수량</th>
-                    <th>총액</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% products.forEach(product => { %>
-                    <tr>
-                      <td><%= product.ID %></td>
-                      <td><%= product.name %></td>
-                      <td><%= product.price %></td>
-                      <td><%= product.counts %></td>
-                      <td><%= product.price*product.counts %></td>
-                    </tr>
-                  <% }); %>
-            </tbody>
-        </table> -->
-
         <table id="inventoryTable"></table>
         <div id="pagination">
           <button onclick="changePage(-1)">이전</button>

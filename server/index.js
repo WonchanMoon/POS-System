@@ -84,7 +84,7 @@ app.delete('/products/name/:productName', async (req, res) => {
 // Path to get all products
 app.get('/products', async (req, res) => {
     try {
-        const products = await Product.find();
+        const products = await Product.find({});
 
         res.json(products); // Returns the products in JSON format
     } catch (error) {
@@ -152,13 +152,13 @@ app.get('/', function(req, res){
 
 app.get('/business', function(req, res){
     console.log("business page");
-    Product.find({}).then((data)=>{
-        // EJS 템플릿 렌더링
-        // console.log("table 읽기 성공");
-        // console.log(data);
-        res.render('./html/business copy 2', { products: data });
-    }).catch((err)=>{
-        console.log(err);
-    });
-    // res.sendFile(__dirname + "/business copy 2.html");
+    // Product.find({}).then((data)=>{
+    //     // EJS 템플릿 렌더링
+    //     // console.log("table 읽기 성공");
+    //     // console.log(data);
+    //     res.render('./html/business copy 2', { products: data });
+    // }).catch((err)=>{
+    //     console.log(err);
+    // });
+    res.sendFile(__dirname + "/Views/html/business.html");
 })

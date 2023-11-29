@@ -9,7 +9,7 @@ const productSchema = mongoose.Schema({  // schema 작성
   },
   name: {
     type: String,
-    maxLength: 50,
+    maxLength: 20,
   },
   price: {
     type: Number,
