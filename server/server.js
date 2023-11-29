@@ -3,10 +3,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken'); 
 const path = require('path');
+require('dotenv').config();
+
 const app = express();
 const port = process.env.PORT;
 
-require('dotenv').config();
 // Middleware to parse the body of requests in JSON format
 app.use(bodyParser.json());
 
@@ -191,6 +192,6 @@ app.get('/', function(req, res){
 })
 
 app.get('/business', function(req, res){
-    console.log("business page");    
+    console.log("business page");
     res.sendFile(__dirname + "/Views/html/business.html");
 })
