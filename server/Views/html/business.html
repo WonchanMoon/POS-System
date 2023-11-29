@@ -3,14 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS 재고 관리</title>
+    <title>POS Business Management</title>
     <style>
-        body {
+        /* body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+        } */
+
+        * {
+          box-sizing: border-box;
         }
+
+        body {
+          /* background-color: var(--color-light-black); */
+          font-family: 'Open Sans', sans-serif;
+          margin: 0;
+          cursor: default;
+        }
+        a {
+          text-decoration: none;
+          color: #ffffff;
+        }
+
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
+
+        /* button {
+          font-family: 'Open Sans', sans-serif;
+          background-color: transparent;
+          cursor: pointer;
+          border: none;
+          outline: none;
+        } */
 
         header {
             background-color: #333;
@@ -139,20 +167,25 @@
 <body>
   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <header>
-        <h1>POS - 재고 관리</h1>
+        <h1>POS - Business Management</h1>
     </header>
 
     <nav>
       <ul>
         <li><a href="/">메인</a></li>
         <li><a href="/">판매 관리</a></li>
-        <li><a href="/">매출 현황</a></li>
-        <li><a href="/business">재고 관리</a></li>
+        <li><a href="/sales">매출 현황</a></li>
+        <li><a href="/business">영업 관리</a></li>
       </ul>
     </nav>
 
     <section>
         <h2>재고 목록</h2>
+
+        <button onclick="openModal('inventoryModal')">상품 추가</button>
+        <button onclick="openModal('fixModal')">상품 수정</button>
+        <button onclick="openModal('delModal')">상품 제거</button>
+        <button onclick="openModal('saleModal')">이벤트 추가</button>
 
         <table id="inventoryTable"></table>
         <div id="pagination">
@@ -160,11 +193,6 @@
           <span id="currentPage">1</span>
           <button onclick="changePage(1)">다음</button>
         </div>
-
-        <button onclick="openModal('inventoryModal')">상품 추가</button>
-        <button onclick="openModal('fixModal')">상품 수정</button>
-        <button onclick="openModal('delModal')">상품 제거</button>
-        <button onclick="openModal('saleModal')">세일 추가</button>
 
         <!-- 모달 창 -->
         <div id="inventoryModal" class="modal">
@@ -182,7 +210,7 @@
                     <input type="text" id="productName" name="productName" required>
                   </div>
                   <div style="margin-bottom: 15px;">  
-                    <label for="productPrice">가격:</label>
+                    <label for="productPrice">단가:</label>
                     <input type="number" id="productPrice" name="productPrice" required>
                   </div>
                   <div style="margin-bottom: 15px;">
@@ -236,7 +264,7 @@
               <h2>상품 수정</h2>
               <form>
                 <div style="margin-bottom: 15px;">
-                  <label for="productName">상품명:</label>
+                  <label for="productName">현재 상품명:</label>
                   <input type="text" id="originalProductName" name="productName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
@@ -244,7 +272,7 @@
                   <input type="text" id="fixProductName" name="productName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="productPrice">가격 수정:</label>
+                  <label for="productPrice">단가 수정:</label>
                   <input type="number" id="fixProductPrice" name="productPrice" required>
                 </div>
                 <div style="margin-bottom: 15px;">
@@ -330,9 +358,9 @@
       const dataToShow = result.slice(start, end);
       console.log(dataToShow);
       // 이전 데이터를 지우고 새로운 데이터를 추가
-      table.innerHTML = "<thead><tr><th>상품명</th><th>가격</th><th>수량</th><th>총액</th></tr></thead><tbody>";
+      table.innerHTML = "<thead><tr><th>상품명</th><th>단가</th><th>수량</th></thead><tbody>";
       dataToShow.forEach(item => {
-        const row = `<tr><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td><td>${item.price * item.counts}</td></tr>`;
+        const row = `<tr><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td></tr>`;
         table.innerHTML += row;
       });
       table.innerHTML += "</tbody>";
@@ -430,6 +458,11 @@
         })
       }
     }
+
+    // 영어 지원 함수
+
+
+
 
     </script>
 </body>
