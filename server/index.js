@@ -117,11 +117,11 @@ app.get('/products/name/:productName', async (req, res) => {
 app.put('/products/name/:productName', async (req, res) => {
     try {
         const productName = req.params.productName;
-        const { newName, newPrice } = req.body;
+        const { newName, newPrice, newCounts } = req.body;
 
         const result = await Product.findOneAndUpdate(
             { name: productName },
-            { $set: { name: newName, price: newPrice } },
+            { $set: { name: newName, price: newPrice, counts: newCounts } },
             { new: true } // Returns the updated document
         );
 
@@ -154,8 +154,8 @@ app.get('/business', function(req, res){
     console.log("business page");
     Product.find({}).then((data)=>{
         // EJS 템플릿 렌더링
-        console.log("table 읽기 성공")
-        console.log(data);
+        // console.log("table 읽기 성공");
+        // console.log(data);
         res.render('./html/business copy 2', { products: data });
     }).catch((err)=>{
         console.log(err);

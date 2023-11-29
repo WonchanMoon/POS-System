@@ -119,7 +119,6 @@
                     <th>가격</th>
                     <th>수량</th>
                     <th>총액</th>
-                    <th>동작</th>
                 </tr>
             </thead>
             <tbody>
@@ -130,12 +129,13 @@
                       <td><%= product.price %></td>
                       <td><%= product.counts %></td>
                       <td><%= product.price*product.counts %></td>
-                      <td><button>수정</button> <button>삭제</button></td>
                     </tr>
                   <% }); %>
             </tbody>
         </table>
         <button onclick="openModal('inventoryModal')">재고 추가</button>
+        <button onclick="openModal('fixModal')">항목 수정</button>
+        <button onclick="openModal('delModal')">항목 제거</button>
         <button onclick="openModal('saleModal')">세일 추가</button>
 
         <!-- 모달 창 -->
@@ -187,10 +187,53 @@
               </form>
           </div>
         </div>
+        <div id="delModal" class="modal">
+          <div class="modal-content">
+              <span class="close" onclick="closeModal('delModal')">&times;</span>
+              <h2>항목 제거</h2>
+              <form>
+                <div style="margin-bottom: 15px;">
+                  <label for="productName">상품명:</label>
+                  <input type="text" id="delProductName" name="productName" required>
+                </div>
+                <div style="text-align: right;">
+                  <button type="button" onclick="delProduct()">제거</button>
+                </div>
+              </form>
+          </div>
+        </div>
+        <div id="fixModal" class="modal">
+          <div class="modal-content">
+              <span class="close" onclick="closeModal('fixModal')">&times;</span>
+              <h2>항목 수정</h2>
+              <form>
+                <div style="margin-bottom: 15px;">
+                  <label for="productName">상품명:</label>
+                  <input type="text" id="originalProductName" name="productName" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                  <label for="productName">상품명 수정:</label>
+                  <input type="text" id="fixProductName" name="productName" required>
+                </div>
+                <div style="margin-bottom: 15px;">  
+                  <label for="productPrice">가격 수정:</label>
+                  <input type="number" id="fixProductPrice" name="productPrice" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                  <label for="productQuantity">수량 수정:</label>
+                  <input type="number" id="fixProductQuantity" name="productQuantity" required>
+                </div>
+                <div style="text-align: right;">
+                  <button type="button" onclick="fixProduct()">수정</button>
+                </div>
+              </form>
+          </div>
+        </div>
     </section>
 
     <script>
-      
+
+    // 모달 open/close 관련
     function openModal(modalId) {
         document.getElementById(modalId).style.display = 'block';
     }
@@ -204,16 +247,46 @@
     window.onclick = function(event) {
         var inventoryModal = document.getElementById('inventoryModal');
         var saleModal = document.getElementById('saleModal');
+        var delModal = document.getElementById('delModal');
+        var fixMidal = document.getElementById('fixModal');
         if (event.target == inventoryModal) {
             inventoryModal.style.display = 'none';
         } 
         else if (event.target == saleModal) {
             saleModal.style.display = 'none';
         }
+        else if (event.target == delModal) {
+            delModal.style.display = 'none';
+        }
+        else if (event.target == fixModal) {
+            fixModal.style.display = 'none';
+        }
     }
+    // 모달 창 엔터키 작동
+    document.getElementById('inventoryModal').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+          addInventory();
+        }
+    });
+    document.getElementById('saleModal').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            addSale();
+        }
+    });
+    document.getElementById('delModal').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            delProduct();
+        }
+    });
+    document.getElementById('fixModal').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            fixProduct();
+        }
+    });
 
+    // 제품 추가 함수
     function addInventory() {
-      // 여기에 제품을 추가하는 JavaScript 로직을 추가할 수 있습니다.
+      
       $.ajax({
       type: 'POST',
       url: '/products',
@@ -229,15 +302,52 @@
       console.log(result.message);
       alert('제품이 추가되었습니다.');
       closeModal('inventoryModal');
-    })
+      })
       
     }
     
+    // 세일 추가 함수
     function addSale() {
       // 여기에 세일을 추가하는 JavaScript 로직을 추가할 수 있습니다.
       alert('세일이 추가되었습니다.');
       closeModal('saleModal');
     }
+
+    // 제품 제거 함수
+    function delProduct(){
+      $.ajax({
+      type: 'DELETE',
+      url: '/products/name/' + $('#delProductName').val(),
+      data: {
+      },
+      dataType: "json"
+      }).done((result)=>{
+      console.log(result);
+      console.log(result.message);
+      alert('제품이 제거되었습니다.');
+      closeModal('delModal');
+      })
+    }
+
+    // 제품 수정 함수
+    function fixProduct(){
+      $.ajax({
+      type: 'PUT',
+      url: '/products/name/' + $('#originalProductName').val(),
+      data: {
+        "newName" : $('#fixProductName').val(),
+        "newPrice" : $('#fixProductPrice').val(),
+        "newCounts" : $('#fixProductQuantity').val()
+      },
+      dataType: "json"
+      }).done((result)=>{
+      console.log(result);
+      console.log(result.message);
+      alert('제품이 수정되었습니다.');
+      closeModal('fixModal');
+      })
+    }
+
     </script>
 </body>
 </html>
