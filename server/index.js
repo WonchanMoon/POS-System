@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken'); 
 const path = require('path');
 
 const app = express();
@@ -33,16 +34,56 @@ async function connect(){
 
 connect();
 
-// // Define the schema of the "products" collection
-// const productSchema = new mongoose.Schema({
-//     name: String,
-//     price: Number,
-// });
-
-// const Product = mongoose.model('Products', productSchema);
-
 const { Product } = require('./Models/Product'); // 1. 지난 번 만들어 두었던 Product.js(스키마) 임포트
+const { User } = require('./Models/User'); //importing user
 
+app.post('/register', async (req, res) => {
+    try {
+      const { email, password } = req.body;
+  
+      // verify if already user
+      const existingUser = await User.findOne({ $or: [{email }] });
+      if (existingUser) {
+        return res.status(400).json({ error: 'Email already in use' });
+      }
+  
+      // create new user
+      const newUser = new User({email, password });
+  
+      //saving user
+      await newUser.save();
+  
+      res.status(201).json({ message: 'Registration sucessfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error in registering the user' });
+    }
+  });
+  
+// Path to login
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Search the user by email
+        const user = await User.findOne({ email });
+
+       // Check if the user exists and the password is correct
+        if (user && user.password === password) {
+            // generate token --> in any case if we need like to check that it is the admin I guess so he can edit the products
+            //FIGURE IT OUT LATER
+            const token = jwt.sign({ userId: user._id, email: user.email }, 'secret_key', { expiresIn: '1h' });
+
+            // give the token to the user
+            res.json({ token });
+        } else {
+            res.status(401).json({ error: 'Incorrect credentials' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to login' });
+    }
+});
 
 // Path to add a new product
 app.post('/products', async (req, res) => {
@@ -151,14 +192,6 @@ app.get('/', function(req, res){
 })
 
 app.get('/business', function(req, res){
-    console.log("business page");
-    // Product.find({}).then((data)=>{
-    //     // EJS 템플릿 렌더링
-    //     // console.log("table 읽기 성공");
-    //     // console.log(data);
-    //     res.render('./html/business copy 2', { products: data });
-    // }).catch((err)=>{
-    //     console.log(err);
-    // });
+    console.log("business page");    
     res.sendFile(__dirname + "/Views/html/business.html");
 })
