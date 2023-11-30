@@ -3,12 +3,13 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken'); 
 const path = require('path');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT;
-const router = express.Router();
 
 // Middleware to parse the body of requests in JSON format
 app.use(bodyParser.json());
@@ -17,13 +18,12 @@ app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlen
 app.use(express.json()); // application/json
 // app.use(express.static("./Views/lib"));
 app.use(express.static(path.join(__dirname, 'Views')));
-app.use('/', router);
 
 app.use(session({
     secret: 'secret-key',
-    resave: true,
+    resave: false,
     saveUninitialized: true,
-}));
+  }));
 
 // ejs
 app.set('view engine', 'ejs'); //view engine이 사용할 Template Engine
@@ -31,6 +31,17 @@ app.set('views', __dirname + '/Views');
 
 // conection to MongoDB
 const url = process.env.MONGO_URL;
+
+// Middleware to check if the user is authenticated
+const authenticateUser = (req, res, next) => {
+    if (req.session && req.session.userId) {
+      // User is authenticated
+      next();
+    } else {
+      // User is not authenticated, redirect to login page
+      res.redirect('/login');
+    }
+};
 
 async function connect(){
     try{
@@ -46,67 +57,55 @@ connect();
 const { Product } = require('./Models/Product'); // 1. 지난 번 만들어 두었던 Product.js(스키마) 임포트
 const { User } = require('./Models/User'); //importing user
 
+app.get('/', authenticateUser, (req, res) => {
+    res.send(`Hello, ${req.session.userId}!`);
+});
+  
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/Views/html/main.html');
+});
+
 app.post('/register', async (req, res) => {
     try {
         const { ID, password, name, role } = req.body;
       
-        // verify if the user already exists
-        const existingUser = await User.findOne({ ID });
-        if (existingUser) {
-            return res.status(400).json({ error: 'ID already in use' });
-        }
+      // verify if already user
+      const existingUser = await User.findOne({ $or: [{ ID }] });
+      if (existingUser) {
+        return res.status(400).json({ error: 'ID already in use' });
+      }
   
-        // create a new user
-        const newUser = new User({ ID, password, name, role });
+      // create new user
+      const newUser = new User({ ID, password, name, role });
   
-        // saving user
-        //await newUser.save();
+      //saving user
+      await User.create({ ID, password, name, role });
   
-        res.status(201).json({ message: 'Registration successful' });
+      res.status(201).json({ message: 'Registration sucessfully' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: `Error in registering the user: ${error.message}` });
+      console.error(error);
+      res.status(500).json({ error: 'Error in registering the user' });
     }
-});
-
+  });
+  
 // Path to login
 app.post('/login', async (req, res) => {
     try {
         const { ID, password } = req.body;
-        
-        if(req.session.user) {
-            res.redirect('/Views/html/inter.html');
+
+        // Search the user by ID
+        const user = await User.findOne({ ID });
+
+       // Check if the user exists and the password is correct
+        if (user && user.password === password) {
+            req.session.userId = user
+
         } else {
-            // Search the user by ID
-            const user = await User.findOne({ ID });
-
-            // Check if the user exists and the password is correct
-            if (user && user.password === password) {
-                // generate token --> in any case if we need like to check that it is the admin I guess so he can edit the products
-                //FIGURE IT OUT LATER
-                const token = jwt.sign({ userId: user._id, ID: user.ID }, 'secret_key', { expiresIn: '1h' });
-
-                // give the token to the user
-                res.json({ token });
-            } else {
-                res.status(401).json({ error: 'Incorrect credentials' });
-            }
+            res.status(401).json({ error: 'Incorrect credentials' });
         }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to login' });
-    }
-});
-
-//get users
-app.get('/users', async (req, res) => {
-    try {
-        const user = await User.find({});
-
-        res.json(user); // Returns the products in JSON format
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error fetching users' });
     }
 });
 
@@ -211,7 +210,7 @@ console.log('Using collection:', Product.collection.name);
 
 
 // Views
-app.get('/login', function(req, res){
+app.get('/', function(req, res){
     console.log("index page");
     res.sendFile(__dirname + "/Views/html/main.html");
 })

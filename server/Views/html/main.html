@@ -1,44 +1,60 @@
-<div class="container" id="container">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../lib/main.css" type="text/css">
+</head>
+
+<body>
+  <div class="container" id="container">
     <div class="form-container sign-up-container">
-      <form action="#">
-        <h1>Create Account</h1>
-        <div class="social-container">
-        </div>
+      <form action="/register" method="post">
+        <h2>Create Account</h2>
+        <div class="social-container"></div>
+        <input type="text" placeholder="StoreName"/>
         <input type="text" placeholder="Name" />
-        <input type="email" placeholder="Email" />
+        <input type="text" placeholder="ID" />
         <input type="password" placeholder="Password" />
-        <button>Sign Up</button>
+
+        <div style="display: flex; align-items: center;">
+          <p style="margin-right: 10px">Select your role</p><p>
+          <button type="button" onclick="selectRole('Employee')" id="EmployeeButton">Employee</button>
+          <button type="button" onclick="selectRole('Manager')" id="ManagerButton">Manager</button>
+          </p>
+        </div>
+
+        <button type="register" onclick="signUp()">Sign Up</button>
       </form>
     </div>
     <div class="form-container sign-in-container">
-      <form action="#">
+      <form action="/login" method="post">
         <h1>Sign in</h1>
-        <div class="social-container">
-        </div>
-        <input type="email" placeholder="Email" />
+        <div class="social-container"></div>
+        <input type="text" placeholder="ID" />
         <input type="password" placeholder="Password" />
-        <a href="#">Forgot your password?</a>
-        <button>Sign In</button>
+        <button onclick="login()">Sign In</button>
       </form>
     </div>
     <div class="overlay-container">
       <div class="overlay">
         <div class="overlay-panel overlay-left">
           <h1>Welcome Back!</h1>
-          <p>To keep connected with us please login with your personal info</p>
+          <p>To keep connected with us please login with your info</p>
           <button class="ghost" id="signIn">Sign In</button>
         </div>
         <div class="overlay-panel overlay-right">
           <h1>Hello, Friend!</h1>
-          <p>Enter your personal details and start journey with us</p>
+          <p>Enter your details and start journey with us</p>
           <button class="ghost" id="signUp">Sign Up</button>
         </div>
       </div>
     </div>
   </div>
+</body>
 
-<!-- style.css라는 css파일을 연결 -->
-<link rel="stylesheet" href="/lib/main.css" (type="text/css")>
+<!-- server.js라는 javascript파일을 연결 -->
+<script src="../../server.js"></script>
+<script src="../lib/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
-<!-- index.js라는 javascript파일을 연결 -->
-<script src="/lib/main.js"></script>
+</html>
