@@ -39,40 +39,41 @@ const { User } = require('./Models/User'); //importing user
 
 app.post('/register', async (req, res) => {
     try {
-      const { email, password } = req.body;
+        const { ID, password, name, role } = req.body;
+      
+        // verify if the user already exists
+        const existingUser = await User.findOne({ ID });
+        if (existingUser) {
+            return res.status(400).json({ error: 'ID already in use' });
+        }
   
-      // verify if already user
-      const existingUser = await User.findOne({ $or: [{email }] });
-      if (existingUser) {
-        return res.status(400).json({ error: 'Email already in use' });
-      }
+        // create a new user
+        const newUser = new User({ ID, password, name, role });
   
-      // create new user
-      const newUser = new User({email, password });
+        // saving user
+        await newUser.save();
   
-      //saving user
-      await newUser.save();
-  
-      res.status(201).json({ message: 'Registration sucessfully' });
+        res.status(201).json({ message: 'Registration successful' });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error in registering the user' });
+        console.error(error);
+        res.status(500).json({ error: `Error in registering the user: ${error.message}` });
     }
-  });
+});
+
   
 // Path to login
 app.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { ID, password } = req.body;
 
-        // Search the user by email
-        const user = await User.findOne({ email });
+        // Search the user by ID
+        const user = await User.findOne({ ID });
 
        // Check if the user exists and the password is correct
         if (user && user.password === password) {
             // generate token --> in any case if we need like to check that it is the admin I guess so he can edit the products
             //FIGURE IT OUT LATER
-            const token = jwt.sign({ userId: user._id, email: user.email }, 'secret_key', { expiresIn: '1h' });
+            const token = jwt.sign({ userId: user._id, ID: user.ID }, 'secret_key', { expiresIn: '1h' });
 
             // give the token to the user
             res.json({ token });
@@ -82,6 +83,18 @@ app.post('/login', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to login' });
+    }
+});
+
+//get users
+app.get('/users', async (req, res) => {
+    try {
+        const user = await User.find({});
+
+        res.json(user); // Returns the products in JSON format
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching users' });
     }
 });
 
@@ -98,7 +111,7 @@ app.post('/products', async (req, res) => {
 
         res.json(result); // Return the result as JSON
     } catch (error) {
-        res.status(500).json({ error: 'Error... Product coudnt be added' });
+        res.status(500).json({ error: 'Error the product could not be added' });
     }
 });
 //curl -X POST -H "Content-Type: application/json" -d '{"name": "고기", "price": 5000}' http://localhost:8000/products
@@ -117,7 +130,7 @@ app.delete('/products/name/:productName', async (req, res) => {
         }
     } catch (error) {
         console.error(error);  
-        res.status(500).json({ error: 'Error deleting product' });
+        res.status(500).json({ error: 'Error at deleting product' });
     }
 });
 //curl -X DELETE http://localhost:8000/products/name/bread 
@@ -158,11 +171,11 @@ app.get('/products/name/:productName', async (req, res) => {
 app.put('/products/name/:productName', async (req, res) => {
     try {
         const productName = req.params.productName;
-        const { newCategory, newName, newPrice, newCounts, newEvent } = req.body;
-        console.log(req.body);
+        const { newName, newPrice, newCounts } = req.body;
+
         const result = await Product.findOneAndUpdate(
             { name: productName },
-            { $set: { category : newCategory, name: newName, price: newPrice, counts: newCounts , event: newEvent } },
+            { $set: { name: newName, price: newPrice, counts: newCounts } },
             { new: true } // Returns the updated document
         );
 
@@ -173,7 +186,7 @@ app.put('/products/name/:productName', async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating product' });
+        res.status(500).json({ error: 'Error at updating product' });
     }
 });
 //curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple   
