@@ -202,8 +202,8 @@
                 <!-- 재고 추가 폼 또는 내용을 입력할 부분 -->
                 <form>
                   <div style="margin-bottom: 15px;">
-                    <label for="productID">ID:</label>
-                    <input type="text" id="productID" name="productID" required>
+                    <label for="productCategory">카테고리:</label>
+                    <input type="text" id="productCategory" name="productCategory" required>
                   </div>
                   <div style="margin-bottom: 15px;">
                     <label for="productName">상품명:</label>
@@ -217,6 +217,7 @@
                     <label for="productQuantity">수량:</label>
                     <input type="number" id="productQuantity" name="productQuantity" required>
                   </div>
+        
                   <div style="text-align: right;">
                     <button type="button" onclick="addInventory()">추가</button>
                   </div>
@@ -264,19 +265,23 @@
               <h2>상품 수정</h2>
               <form>
                 <div style="margin-bottom: 15px;">
-                  <label for="productName">현재 상품명:</label>
+                  <label for="productName">(필수)현재 상품명:</label>
                   <input type="text" id="originalProductName" name="productName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="productName">상품명 수정:</label>
+                  <label for="ProductCategory">카테고리 수정:</label>
+                  <input type="text" id="fixProductCategory" name="ProductCategory" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                  <label for="productName">(필수)상품명 수정:</label>
                   <input type="text" id="fixProductName" name="productName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="productPrice">단가 수정:</label>
+                  <label for="productPrice">(필수)단가 수정:</label>
                   <input type="number" id="fixProductPrice" name="productPrice" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="productQuantity">수량 수정:</label>
+                  <label for="productQuantity">(필수)수량 수정:</label>
                   <input type="number" id="fixProductQuantity" name="productQuantity" required>
                 </div>
                 <div style="margin-bottom: 15px;">
@@ -362,9 +367,9 @@
       const dataToShow = result.slice(start, end);
       console.log(dataToShow);
       // 이전 데이터를 지우고 새로운 데이터를 추가
-      table.innerHTML = "<thead><tr><th>상품명</th><th>단가</th><th>수량</th><th>이벤트</th></thead><tbody>";
+      table.innerHTML = "<thead><tr><th>카테고리</th><th>상품명</th><th>단가</th><th>수량</th><th>이벤트</th></thead><tbody>";
       dataToShow.forEach(item => {
-        const row = `<tr><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td><td>${item.event}</td></tr>`;
+        const row = `<tr><td>${item.category}</td><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td><td>${item.event}</td></tr>`;
         table.innerHTML += row;
       });
       table.innerHTML += "</tbody>";
@@ -384,7 +389,7 @@
 
     // 제품 추가 함수
     function addInventory() {
-      id = $('#productID').val();
+      category = $('#productCategory').val();
       name = $('#productName').val();
       price = $('#productPrice').val();
       counts = $('#productQuantity').val();
@@ -397,7 +402,7 @@
         type: 'POST',
         url: '/products',
         data: {
-          "ID" : id,
+          "category" : category,
           "name" : name,
           "price" : price,
           "counts" : counts
@@ -434,6 +439,7 @@
     // 상품 수정 함수
     function fixProduct(){
       name = $('#originalProductName').val();
+      newCategory = $('#fixProductCategory').val();
       newName = $('#fixProductName').val();
       newPrice = $('#fixProductPrice').val();
       newCounts = $('#fixProductQuantity').val();
@@ -448,6 +454,7 @@
         url: '/products/name/' + name,
         data: {
           "productName" : name,
+          "newCategory" : newCategory,
           "newName" : newName,
           "newPrice" : newPrice,
           "newCounts" : newCounts,

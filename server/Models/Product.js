@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema({  // schema 작성
     maxLength: 10,
     trim: true, // space 없애줌
     unique: 1, // 유일
-    required: true,
+    // required: true,
   },
   name: {
     type: String,
@@ -25,8 +25,13 @@ const productSchema = mongoose.Schema({  // schema 작성
   event: {
     type: String,
     maxLength: 50,
-    default: "없음",
+    default: "",
   },
+  category: {
+    type: String,
+    maxLength: 10,
+    default: "",
+  }
 });
 
 const Product = mongoose.model('Product', productSchema); // Schema를 model로 감싸줌
