@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS 매출 현황</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 5px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 10px;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav li {
+            margin: 0 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        section {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        #totalSales {
+            font-weight: bold;
+        }
+
+        #refreshButton {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #refreshButton:hover {
+            background-color: #45a049;
+        }
+
+        #currentDate {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <header>
+        <h1>POS - 매출 현황</h1>
+    </header>
+
+    <nav>
+      <ul>
+        <li><a href="/">메인</a></li>
+        <li><a href="/">판매 관리</a></li>
+        <li><a href="/sales">매출 현황</a></li>
+        <li><a href="/business">재고 관리</a></li>
+      </ul>
+    </nav>
+
+    <section>
+        <h2>판매된 상품 목록</h2>
+        <p id="currentDate"></p>
+        <table id="salesTable">
+            <thead>
+                <tr>
+                    <th>상품명</th>
+                    <th>가격</th>
+                    <th>판매 수량</th>
+                    <th>총 판매 금액</th>
+                </tr>
+            </thead>
+            <tbody id="soldProductsList"></tbody>
+        </table>
+
+        <p id="totalSales">일간 총 판매액: <span id="totalSalesAmount"></span></p>
+
+        <button id="refreshButton" onclick="refreshSalesInfo()">새로고침</button>
+    </section>
+
+    <script>
+    // 테이블 페이징
+    const itemsPerPage = 5;
+    let currentPage = 1;
+
+    function renderTable(page) {
+      const table = document.getElementById('inventoryTable');
+      $.ajax({
+      type: 'GET',
+      url: '/sales',
+      data: {
+      },
+      dataType: "json"
+      }).done((result) =>{
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const dataToShow = result.slice(start, end);
+      console.log(dataToShow);
+
+      // 이전 데이터를 지우고 새로운 데이터를 추가
+      table.innerHTML = "<thead><tr><th>상품명</th><th>가격</th><th>수량</th><th>총액</th></tr></thead><tbody>";
+      dataToShow.forEach(item => {
+        const row = `<tr><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td><td>${item.price * item.counts}</td></tr>`;
+        table.innerHTML += row;
+      });
+      table.innerHTML += "</tbody>";
+      document.getElementById('currentPage').innerText = page;   
+      })
+    }
+    function changePage(diff) {
+        currentPage += diff;
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+        renderTable(currentPage);
+    }
+    // 초기 테이블 렌더링
+    renderTable(currentPage);
+
+    // 페이지 로딩 시 초기 매출 정보 표시
+    refreshSalesInfo();
+    </script>
+</body>
+</html>
