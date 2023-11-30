@@ -183,9 +183,9 @@
         <h2>재고 목록</h2>
 
         <button onclick="openModal('inventoryModal')">상품 추가</button>
-        <button onclick="openModal('fixModal')">상품 수정</button>
+        <button onclick="openModal('fixModal')">상품/이벤트 수정</button>
         <button onclick="openModal('delModal')">상품 제거</button>
-        <button onclick="openModal('saleModal')">이벤트 추가</button>
+        <!-- <button onclick="openModal('saleModal')">이벤트 추가</button> -->
 
         <table id="inventoryTable"></table>
         <div id="pagination">
@@ -226,19 +226,19 @@
         <div id="saleModal" class="modal">
           <div class="modal-content">
               <span class="close" onclick="closeModal('saleModal')">&times;</span>
-              <h2>세일 추가</h2>
+              <h2>이벤트 추가</h2>
               <!-- 세일 추가 폼 또는 내용을 입력할 부분 -->
               <form>
                 <div style="margin-bottom: 15px;">
-                  <label for="saleProductID">ID:</label>
-                  <input type="text" id="saleProductID" name="saleProductID" required>
+                  <label for="saleProductName">상품명:</label>
+                  <input type="text" id="saleProductName" name="saleProductName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="saleDiscount">할인율(%):</label>
-                  <input type="number" id="saleDiscount" name="saleDiscount" required>
+                  <label for="saleEvent">추가할 이벤트:</label>
+                  <input type="String" id="saleEvent" name="saleEvent" required>
                 </div>
                 <div style="text-align: right;">
-                  <button type="button" onclick="addSale()">추가</button>
+                  <button type="button" onclick="addsale()">추가</button>
                 </div>
               </form>
           </div>
@@ -278,6 +278,10 @@
                 <div style="margin-bottom: 15px;">
                   <label for="productQuantity">수량 수정:</label>
                   <input type="number" id="fixProductQuantity" name="productQuantity" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                  <label for="saleEvent">이벤트 수정:</label>
+                  <input type="String" id="fixProductEvent" name="fixProductEvent" required>
                 </div>
                 <div style="text-align: right;">
                   <button type="button" onclick="fixProduct()">수정</button>
@@ -358,9 +362,9 @@
       const dataToShow = result.slice(start, end);
       console.log(dataToShow);
       // 이전 데이터를 지우고 새로운 데이터를 추가
-      table.innerHTML = "<thead><tr><th>상품명</th><th>단가</th><th>수량</th></thead><tbody>";
+      table.innerHTML = "<thead><tr><th>상품명</th><th>단가</th><th>수량</th><th>이벤트</th></thead><tbody>";
       dataToShow.forEach(item => {
-        const row = `<tr><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td></tr>`;
+        const row = `<tr><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td><td>${item.event}</td></tr>`;
         table.innerHTML += row;
       });
       table.innerHTML += "</tbody>";
@@ -408,14 +412,10 @@
       }
     }
     
-    // 세일 추가 함수
-    function addSale() {
-      alert($('#saleProductID').val() == "")
-      alert('세일이 추가되었습니다.');
-      closeModal('saleModal');
-    }
+    // 이벤트 추가 함수
 
-    // 제품 제거 함수
+
+    // 상품 제거 함수
     function delProduct(){
       $.ajax({
       type: 'DELETE',
@@ -431,12 +431,14 @@
       })
     }
 
-    // 제품 수정 함수
+    // 상품 수정 함수
     function fixProduct(){
       name = $('#originalProductName').val();
       newName = $('#fixProductName').val();
       newPrice = $('#fixProductPrice').val();
       newCounts = $('#fixProductQuantity').val();
+      newEvent = $('#fixProductEvent').val();
+
       if (name == "" || newName == "" || newPrice == "" || newCounts == ""){
         alert('항목을 모두 작성하세요.');
       }
@@ -445,9 +447,11 @@
         type: 'PUT',
         url: '/products/name/' + name,
         data: {
+          "productName" : name,
           "newName" : newName,
           "newPrice" : newPrice,
-          "newCounts" : newCounts
+          "newCounts" : newCounts,
+          "newEvent" : newEvent
         },
         dataType: "json"
         }).done((result)=>{

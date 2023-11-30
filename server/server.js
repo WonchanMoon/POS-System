@@ -158,11 +158,11 @@ app.get('/products/name/:productName', async (req, res) => {
 app.put('/products/name/:productName', async (req, res) => {
     try {
         const productName = req.params.productName;
-        const { newName, newPrice, newCounts } = req.body;
-
+        const { newName, newPrice, newCounts, newEvent } = req.body;
+        console.log(req.body);
         const result = await Product.findOneAndUpdate(
             { name: productName },
-            { $set: { name: newName, price: newPrice, counts: newCounts } },
+            { $set: { name: newName, price: newPrice, counts: newCounts , event: newEvent } },
             { new: true } // Returns the updated document
         );
 
