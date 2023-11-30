@@ -320,3 +320,7 @@ app.get('/sales', function(req, res){
     console.log("sales page");
     res.sendFile(__dirname + "/Views/html/sales.html");
 })
+app.get('/service', function(req, res){
+    console.log("service page");
+    res.sendFile(__dirname + "/Views/html/service.html");
+})
