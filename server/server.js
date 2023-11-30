@@ -123,7 +123,7 @@ app.post('/products', async (req, res) => {
 
         res.json(result); // Return the result as JSON
     } catch (error) {
-        res.status(500).json({ error: 'Error... Product coudnt be added' });
+        res.status(500).json({ error: 'Error the product could not be added' });
     }
 });
 //curl -X POST -H "Content-Type: application/json" -d '{"name": "고기", "price": 5000}' http://localhost:8000/products
@@ -142,7 +142,7 @@ app.delete('/products/name/:productName', async (req, res) => {
         }
     } catch (error) {
         console.error(error);  
-        res.status(500).json({ error: 'Error deleting product' });
+        res.status(500).json({ error: 'Error at deleting product' });
     }
 });
 //curl -X DELETE http://localhost:8000/products/name/bread 
@@ -198,7 +198,7 @@ app.put('/products/name/:productName', async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error updating product' });
+        res.status(500).json({ error: 'Error at updating product' });
     }
 });
 //curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple   
