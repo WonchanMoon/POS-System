@@ -21,11 +21,6 @@ const productSchema = mongoose.Schema({  // schema 작성
     type: Number,
     required: true,
   },
-  event: {
-    type: String,
-    maxLength: 50,
-    default: "",
-  },
   category: {
     type: String,
     maxLength: 10,

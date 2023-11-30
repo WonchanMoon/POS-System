@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS Business Management</title>
+    <title>POS</title>
     <style>
         /* body {
             font-family: Arial, sans-serif;
@@ -17,7 +17,7 @@
         }
 
         body {
-          /* background-color: var(--color-light-black); */
+          background-color: #7c7979;
           font-family: 'Open Sans', sans-serif;
           margin: 0;
           cursor: default;
@@ -105,8 +105,8 @@
         }
 
         button {
-            background-color: #4caf50;
-            color: white;
+            background-color: #feb546;
+            color: 000000;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -114,7 +114,7 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #f7ae34;
         }
         /* 모달 스타일 */
         .modal {
@@ -167,7 +167,7 @@
 <body>
   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <header>
-        <h1>POS - Business Management</h1>
+        <h1>영업 관리</h1>
     </header>
 
     <nav>
@@ -185,7 +185,6 @@
         <button onclick="openModal('inventoryModal')">상품 추가</button>
         <button onclick="openModal('fixModal')">상품 수정</button>
         <button onclick="openModal('delModal')">상품 제거</button>
-        <!-- <button onclick="openModal('saleModal')">이벤트 추가</button> -->
 
         <table id="inventoryTable"></table>
         <div id="pagination">
