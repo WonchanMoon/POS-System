@@ -4,32 +4,28 @@ const salesSchema = mongoose.Schema({  // schema 작성
   ID: {
     type: String,
     trim: true, // space 없애줌
-    unique: 1, // 유일
-    required: true,
-  },
-  name: {
-    type: String,
-    maxLength: 20,
-    required: true,
-    trim: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  counts: {
-    type: Number,
     required: true,
   },
   date: {
     type: Date,
     default: Date.now, // 추가 시점
     expires:60*60*24*90, // 30일 기한
-    required: true,
   },
-  data: {
-    type: String,
-  }
+  data: [mongoose.Schema.Types.Mixed],
+  // name: {
+  //   type: String,
+  //   maxLength: 20,
+  //   required: true,
+  //   trim: true,
+  // },
+  // price: {
+  //   type: Number,
+  //   required: true,
+  // },
+  // counts: {
+  //   type: Number,
+  //   required: true,
+  // },
 });
 
 const Sales = mongoose.model('Sales', salesSchema); // Schema를 model로 감싸줌

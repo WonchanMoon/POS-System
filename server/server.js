@@ -9,6 +9,7 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT;
 const router = express.Router();
+var gloalID;
 
 // Middleware to parse the body of requests in JSON format
 app.use(bodyParser.json());
@@ -19,11 +20,11 @@ app.use(express.json()); // application/json
 app.use(express.static(path.join(__dirname, 'Views')));
 app.use('/', router);
 
-// app.use(session({
-//     secret: 'secret-key',
-//     resave: true,
-//     saveUninitialized: true,
-// }));
+app.use(session({
+    secret: 'secret-key',
+    resave: true,
+    saveUninitialized: true,
+}));
 
 // ejs
 app.set('view engine', 'ejs'); //view engine이 사용할 Template Engine
@@ -301,12 +302,17 @@ app.put('/discount/name/:productName', async (req, res) => {
 });
 //curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple   
 
-
-
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+//////////////sales////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
+///////////////////////////////////////////
 // Path to add a new sales
 app.post('/salesList', async (req, res) => {
     try {
-        console.log(req.body);
         // Create a new document using the Product model
         const newSales = new Sales(
         req.body

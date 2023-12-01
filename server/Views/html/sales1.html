@@ -181,7 +181,7 @@
       </ul>
     </nav>
     <section>
-        <h2>판매 상품 차트</h2>
+        <h2>상품별 매출 차트 (상위 5개)</h2>
         <div class="chart-container">
             <canvas id="salesChart" width="400" height="400" class="mx-auto d-block"></canvas>
         </div>
@@ -197,22 +197,7 @@
           </div>
     </section>
     <script>
-        // 차트를 그리는 JavaScript 코드
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        var salesChart = new Chart(ctx, {
-            type: 'doughnut', // 원형 차트 설정
-            data: {
-                labels: ['상품 A', '상품 B'], // 상품명을 라벨로 사용
-                datasets: [{
-                    data: [100000, 50000], // 매출액을 데이터로 사용
-                    backgroundColor: ['#FF6384', '#36A2EB'] // 각 항목의 색상 설정
-                }]
-            },
-            options :{
-                responsive: false,
-            }
-        });
-
+        var G_List;
         // 판매 테이블 페이징
         const itemsPerPage = 5;
         let currentPage = 1;
@@ -221,22 +206,25 @@
         const table = document.getElementById('salesTable');
         $.ajax({
         type: 'GET',
-        url: '/products',
+        url: '/salesList',
+        async: false,
         data: {
         },
         dataType: "json"
         }).done((result) =>{
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const dataToShow = result.slice(start, end);
-        // 이전 데이터를 지우고 새로운 데이터를 추가
-        table.innerHTML = "<thead><tr><th>카테고리</th><th>상품명</th><th>단가</th><th>수량</th></thead><tbody>";
-        dataToShow.forEach(item => {
-            const row = `<tr><td>${item.category}</td><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td></tr>`;
-            table.innerHTML += row;
-        });
-        table.innerHTML += "</tbody>";
-        document.getElementById('currentPage').innerText = page;   
+            var List = flat(result);
+            G_List = List;
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            dataToShow = List.slice(start, end);
+            // 이전 데이터를 지우고 새로운 데이터를 추가
+            table.innerHTML = "<thead><tr><th>날짜</th><th>상품명</th><th>단가</th><th>수량</th><th>총액</th></thead><tbody>";
+            dataToShow.forEach(item => {
+                const row = `<tr><td>${item.date}</td><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td><td>${item.price*item.counts}</td></tr>`;
+                table.innerHTML += row;
+            });
+            table.innerHTML += "</tbody>";
+            document.getElementById('currentPage').innerText = page; 
         })
         }
         function changePage(diff) {
@@ -248,6 +236,61 @@
         }
         // 초기 테이블 렌더링
         renderTable(currentPage);
+
+        function flat(result){
+            var dataToShow = [];
+            var len = result.length;
+            for(var i=0;i<len;i++){ // 날짜 얻기
+                var date = result[i].date;
+                var len2 = result[i].data.length;
+                for(var j = 0; j < len2; j++){ // 날짜의 상품 목록 얻기
+                    var name = result[i].data[j].name;
+                    var price = result[i].data[j].price;
+                    var counts = result[i].data[j].counts;
+                    dataToShow.push({"name":name, "price":price, "counts":counts, "date":date}); // 병합
+                }
+
+            }
+            return dataToShow;
+        }
+        
+        // 차트를 그리는 JavaScript 코드
+        console.log(G_List);
+        const resultObject = {};
+
+        G_List.forEach(item => {
+        const { name, price, counts } = item;
+        const priceCounts = price * counts;
+
+        if (resultObject[name]) {
+            resultObject[name] += priceCounts;
+        } else {
+            resultObject[name] = priceCounts;
+        }
+        });
+
+        const sortedResultArray = Object.entries(resultObject)
+        .sort((a, b) => b[1] - a[1]);
+
+        const namesArray = sortedResultArray.map(([name, total]) => name);
+        const totalPricesArray = sortedResultArray.map(([name, total]) => total);
+
+        console.log("Names:", namesArray);
+        console.log("Total Prices:", totalPricesArray);
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctx, {
+            type: 'doughnut', // 원형 차트 설정
+            data: {
+                labels: namesArray.slice(0, 5), // 상품명을 라벨로 사용
+                datasets: [{
+                    data: totalPricesArray.slice(0, 5), // 매출액을 데이터로 사용
+                }]
+            },
+            options :{
+                responsive: false,
+            }
+        });
+
     </script>
 
 </body>
