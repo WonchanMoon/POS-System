@@ -365,7 +365,24 @@ function sendPaymentData() {
     },
   });
 
+  data.forEach(lowCounts(product));
   removeAllProducts();
+}
+
+//판매한 개별 상품 재고 낮추기 put 요청
+function lowCounts(product) {
+  $.ajax({
+    url: '/products/counts/' + product.name,
+    type: 'PUT',
+    contentType: 'application/json',
+    data: { counts: product.counts },
+    success: function (response) {
+      console.log('successful:', response);
+    },
+    error: function (error) {
+      console.error('failed:', error);
+    },
+  });
 }
 
 window.onload = function () {
