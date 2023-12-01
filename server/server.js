@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
+const moment = require('moment')
 
+const dateNow = moment().format('YYYY-MM-DD HH:mm:ss')
 const app = express();
 const port = process.env.PORT;
 const saltRounds = 10;
@@ -331,7 +333,7 @@ app.put('/discount/name/:productName', async (req, res) => {
 app.post('/salesList', async (req, res) => {
   try {
     // Create a new document using the Product model
-    post = Object.assign(req.body, { ID: globalID });
+    post = Object.assign(req.body, { ID: globalID , date : dateNow});
     const newSales = new Sales(
       // req.body
       post
