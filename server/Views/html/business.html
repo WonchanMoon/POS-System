@@ -213,11 +213,11 @@
                   </div>
                   <div style="margin-bottom: 15px;">  
                     <label for="productPrice">단가:</label>
-                    <input type="number" maxlength='10' id="productPrice" name="productPrice" required>
+                    <input type="number" maxlength='10' min={0} id="productPrice" name="productPrice" required>
                   </div>
                   <div style="margin-bottom: 15px;">
                     <label for="productQuantity">수량:</label>
-                    <input type="number" maxlength='10' id="productQuantity" name="productQuantity" required>
+                    <input type="number" maxlength='10' min={0} id="productQuantity" name="productQuantity" required>
                   </div>
         
                   <div style="text-align: right;">
@@ -260,11 +260,11 @@
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="productPrice">단가 수정:</label>
-                  <input type="number" maxlength='10' id="fixProductPrice" name="productPrice" required>
+                  <input type="number" maxlength='10' min={0} id="fixProductPrice" name="productPrice" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="productQuantity">수량 수정:</label>
-                  <input type="number" maxlength='10' id="fixProductQuantity" name="productQuantity" required>
+                  <input type="number" maxlength='10' min="{0}" id="fixProductQuantity" name="productQuantity" required>
                 </div>
                 <div style="text-align: right;">
                   <button type="button" onclick="fixProduct()">수정</button>
@@ -306,7 +306,7 @@
                   </div>
                   <div style="margin-bottom: 15px;">  
                     <label for="discountNum">할인(%):</label>
-                    <input type="number" maxlength='5' id="discountNum" name="discountNum" required>
+                    <input type="number" maxlength='5' min={0} max={100} oninput="discountCheck(this);" id="discountNum" name="discountNum" required>
                   </div>
                   <div style="margin-bottom: 15px;">
                     <label for="discountDate">기한:</label>
@@ -345,7 +345,7 @@
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="fixDiscountNum">할인 수정:</label>
-                  <input type="number" maxlength='5' id="fixDiscountNum" name="fixDiscountNum" required>
+                  <input type="number" maxlength='5' min="0" max="100" oninput="discountCheck(this);" id="fixDiscountNum" name="fixDiscountNum" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="fixDiscountDate">기한 수정:</label>
@@ -680,6 +680,19 @@
         alert('할인 수정되었습니다.');
         closeModal('d_fixModal');
         })
+      }
+    }
+
+    // 할인율 조정 함수
+    function discountCheck(e){
+      if(e.value.length > e.maxLength) {
+        e.value = e.value.slice(0, e.maxLength);
+      }
+      
+      if(e.value > 100) {
+        e.value = 100;
+      } else if(e.value < 0) {
+        e.value = 0;
       }
     }
     </script>
