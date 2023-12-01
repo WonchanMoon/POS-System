@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken'); 
 const path = require('path');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT;
+const saltRounds = 10;
 var globalID = null;
 
 // Middleware to parse the body of requests in JSON format
@@ -44,7 +46,7 @@ const { Sales } = require('./Models/Sales'); //importing sales
 app.post('/register', async (req, res) => {
     try {
         const ID = req.body.ID;
-        console.log(req.body);
+        
         // verify if the user already exists
         const existingUser = await User.findOne({ ID });
         if (existingUser) {
@@ -52,7 +54,11 @@ app.post('/register', async (req, res) => {
         } else {
             // create a new user
         const newUser = new User( req.body );
-  
+        
+        // password hashing with bcrypt
+        const hashedPassword = await bcrypt.hash(newUser.password, saltRounds);
+        newUser.password = hashedPassword;
+        
         // saving user
         const result = await newUser.save();
         console.log("register success");
@@ -74,11 +80,11 @@ app.post('/login', async (req, res) => {
             res.redirect('/sales');
         } else {
             const { ID, password } = req.body;
-
             // Search the user by ID
             const user = await User.findOne({ ID });
+
             // Check if the user exists and the password is correct
-            if (user && user.password === password) {
+            if (user && await bcrypt.compare(password, user.password)) {
                 globalID = user.ID;
                 //res.status(200).json({ messagee: 'login success' });
                 res.redirect('/sales');

@@ -202,19 +202,19 @@
                 <form>
                   <div style="margin-bottom: 15px;">
                     <label for="productCategory">카테고리:</label>
-                    <input type="text" id="productCategory" name="productCategory" required>
+                    <input type="text" maxlength='10' id="productCategory" name="productCategory" required>
                   </div>
                   <div style="margin-bottom: 15px;">
                     <label for="productName">상품명:</label>
-                    <input type="text" id="productName" name="productName" required>
+                    <input type="text" maxlength='20' id="productName" name="productName" required>
                   </div>
                   <div style="margin-bottom: 15px;">  
                     <label for="productPrice">단가:</label>
-                    <input type="number" id="productPrice" name="productPrice" required>
+                    <input type="number" maxlength='10' id="productPrice" name="productPrice" required>
                   </div>
                   <div style="margin-bottom: 15px;">
                     <label for="productQuantity">수량:</label>
-                    <input type="number" id="productQuantity" name="productQuantity" required>
+                    <input type="number" maxlength='10' id="productQuantity" name="productQuantity" required>
                   </div>
         
                   <div style="text-align: right;">
@@ -230,7 +230,7 @@
               <form>
                 <div style="margin-bottom: 15px;">
                   <label for="productName">상품명:</label>
-                  <input type="text" id="delProductName" name="productName" required>
+                  <input type="text" maxlength='20' id="delProductName" name="productName" required>
                 </div>
                 <div style="text-align: right;">
                   <button type="button" onclick="delProduct()">제거</button>
@@ -245,23 +245,23 @@
               <form>
                 <div style="margin-bottom: 15px;">
                   <label for="productName">현재 상품명:</label>
-                  <input type="text" id="originalProductName" name="productName" required>
+                  <input type="text" maxlength='20' id="originalProductName" name="productName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="fixProductCategory">카테고리 수정:</label>
-                  <input type="text" id="fixProductCategory" name="ProductCategory" required>
+                  <input type="text" maxlength='10' id="fixProductCategory" name="ProductCategory" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="productName">상품명 수정:</label>
-                  <input type="text" id="fixProductName" name="productName" required>
+                  <input type="text" maxlength='10' id="fixProductName" name="productName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="productPrice">단가 수정:</label>
-                  <input type="number" id="fixProductPrice" name="productPrice" required>
+                  <input type="number" maxlength='10' id="fixProductPrice" name="productPrice" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="productQuantity">수량 수정:</label>
-                  <input type="number" id="fixProductQuantity" name="productQuantity" required>
+                  <input type="number" maxlength='10' id="fixProductQuantity" name="productQuantity" required>
                 </div>
                 <div style="text-align: right;">
                   <button type="button" onclick="fixProduct()">수정</button>
@@ -299,11 +299,11 @@
                 <form>
                   <div style="margin-bottom: 15px;">
                     <label for="d_productName">상품명:</label>
-                    <input type="text" id="d_productName" name="d_productName" required>
+                    <input type="text" maxlength='20' id="d_productName" name="d_productName" required>
                   </div>
                   <div style="margin-bottom: 15px;">  
                     <label for="discountNum">할인(%):</label>
-                    <input type="number" id="discountNum" name="discountNum" required>
+                    <input type="number" maxlength='5' id="discountNum" name="discountNum" required>
                   </div>
                   <div style="margin-bottom: 15px;">
                     <label for="discountDate">기한:</label>
@@ -323,7 +323,7 @@
               <form>
                 <div style="margin-bottom: 15px;">
                   <label for="d_delProductName">상품명:</label>
-                  <input type="text" id="d_delProductName" name="d_delProductName" required>
+                  <input type="text" maxlength='20' id="d_delProductName" name="d_delProductName" required>
                 </div>
                 <div style="text-align: right;">
                   <button type="button" onclick="delDiscount()">제거</button>
@@ -338,11 +338,11 @@
               <form>
                 <div style="margin-bottom: 15px;">
                   <label for="d_originalProductName">상품명:</label>
-                  <input type="text" id="d_originalProductName" name="d_originalProductName" required>
+                  <input type="text" maxlength='20' id="d_originalProductName" name="d_originalProductName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="fixDiscountNum">할인 수정:</label>
-                  <input type="number" id="fixDiscountNum" name="fixDiscountNum" required>
+                  <input type="number" maxlength='5' id="fixDiscountNum" name="fixDiscountNum" required>
                 </div>
                 <div style="margin-bottom: 15px;">
                   <label for="fixDiscountDate">기한 수정:</label>
