@@ -278,19 +278,18 @@ function clearReceivedAmount() {
 
 // 상품을 로드하고 표시하는 함수
 function loadProducts() {
-  // 예시 데이터: DB에서 상품 정보와 할인율을 로드
-  var products = [
-    { name: '상품 A', price: 1000, discount: 10 },
-    { name: '상품 B', price: 1500, discount: 5 },
-    { name: '상품 C', price: 2000, discount: 0 },
-    { name: '상품 D', price: 2000, discount: 0 },
-    { name: '상품 E', price: 2000, discount: 0 },
-    { name: '상품 F', price: 2000, discount: 0 },
-    { name: '상품 G', price: 2000, discount: 0 },
-    { name: '상품 H', price: 2000, discount: 0 },
-    // 더 많은 상품...
-  ];
+  // var products = [
+  //   { name: '상품 A', price: 1000, discount: 10 },
+  //   { name: '상품 B', price: 1500, discount: 5 },
+  //   { name: '상품 C', price: 2000, discount: 0 },
+  //   { name: '상품 D', price: 2000, discount: 0 },
+  //   { name: '상품 E', price: 2000, discount: 0 },
+  //   { name: '상품 F', price: 2000, discount: 0 },
+  //   { name: '상품 G', price: 2000, discount: 0 },
+  //   { name: '상품 H', price: 2000, discount: 0 },
+  // ];
 
+  var products = [];
   $.ajax({
     type: 'GET',
     url: '/products',
@@ -298,10 +297,8 @@ function loadProducts() {
     dataType: 'json',
   }).done((result) => {
     console.log(result);
-    console.log(result.message);
+    products = result;
   });
-
-  var example = {};
 
   var productCatalog = document.querySelector('.product-catalog');
   products.forEach(function (product) {
