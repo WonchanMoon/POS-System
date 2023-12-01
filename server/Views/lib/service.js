@@ -287,7 +287,7 @@ function loadProducts() {
   }).done((result1) => {
     console.log(result1);
 
-    for (let i = 0; i < products.length; i++) {
+    for (let i = 0; i < result1.length; i++) {
       $.ajax({
         type: 'GET',
         url: '/discount/name/' + result1[i].name,
