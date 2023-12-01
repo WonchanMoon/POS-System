@@ -7,6 +7,9 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 const moment = require('moment')
 
+require('moment-timezone');
+moment.tz.setDefault("Asia/Seoul");
+
 const dateNow = moment().format('YYYY-MM-DD HH:mm:ss')
 const app = express();
 const port = process.env.PORT;
