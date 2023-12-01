@@ -226,8 +226,8 @@ app.put('/products/name/:productName', async (req, res) => {
 
 app.put('/products/counts/:productName', async (req, res) => {
   try {
-    const productName = req.params.productName;
-    const { newCounts } = req.body;
+    // const productName = req.params.productName;
+    const { productName, newCounts } = req.body;
     const product = await Product.findOne({ ID: globalID, name: productName });
     var ncounts = product.counts;
     const result = await Product.findOneAndUpdate(
