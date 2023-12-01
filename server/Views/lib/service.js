@@ -26,18 +26,22 @@ setInterval(showTime, 1000);
 // 상품을 테이블에 추가하는 함수
 function addProduct(name, price, quantity, discount) {
   var table = document.getElementById('productTable');
+
+  // tbody 요소 찾기 또는 새로 생성
+  var tbody = table.tBodies[0] || table.createTBody();
+
   var productExists = false;
 
-  // 테이블에서 동일한 상품 찾기
-  for (var i = 1; i < table.rows.length; i++) {
-    var productName = table.rows[i].cells[1].innerHTML;
+  // tbody 내의 행을 순회하며 동일한 상품 찾기
+  for (var i = 0; i < tbody.rows.length; i++) {
+    var productName = tbody.rows[i].cells[1].innerHTML;
     if (productName === name) {
       // 동일한 상품이 이미 테이블에 있을 경우, 수량만 증가
-      var quantityCell = table.rows[i].cells[3];
+      var quantityCell = tbody.rows[i].cells[3];
       var currentQuantity = parseInt(quantityCell.innerHTML);
       quantityCell.innerHTML = currentQuantity + quantity;
-      var cell6 = table.rows[i].cells[5]; // 금액 셀
-      cell6.innerHTML = calculateAmount(
+      var amountCell = tbody.rows[i].cells[5]; // 금액 셀
+      amountCell.innerHTML = calculateAmount(
         price,
         currentQuantity + quantity,
         discount
@@ -47,9 +51,10 @@ function addProduct(name, price, quantity, discount) {
     }
   }
 
-  // 테이블에 상품이 없을 경우, 새로 추가
+  // 테이블의 tbody에 상품이 없을 경우, 새로 추가
   if (!productExists) {
-    var row = table.insertRow(-1);
+    var row = tbody.insertRow(-1);
+    // 행에 셀 추가 및 내용 채우기
     row.insertCell(0); // No.
     row.insertCell(1).innerHTML = name; // 상품명
     row.insertCell(2).innerHTML = price; // 단가
