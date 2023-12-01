@@ -339,25 +339,27 @@ function sendPaymentData() {
   for (var i = 1; i < table.rows.length; i++) {
     var row = table.rows[i];
     var name = row.cells[1].innerHTML; // 상품명
-    var price = parseInt(row.cells[2].innerHTML); // 단가
+    var price = parseInt(row.cells[5].innerHTML); // 금액
     var counts = parseInt(row.cells[3].innerHTML); // 수량
 
     data.push({ name: name, price: price, counts: counts });
   }
 
   console.log(data);
-  // $.ajax({
-  //   url: '/your-payment-api-endpoint',
-  //   type: 'POST',
-  //   contentType: 'application/json',
-  //   data: JSON.stringify(data),
-  //   success: function (response) {
-  //     console.log('Payment successful:', response);
-  //   },
-  //   error: function (error) {
-  //     console.error('Payment failed:', error);
-  //   },
-  // });
+  $.ajax({
+    url: '/salesList',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(data),
+    success: function (response) {
+      console.log('Payment successful:', response);
+    },
+    error: function (error) {
+      console.error('Payment failed:', error);
+    },
+  });
+
+  removeAllProducts();
 }
 
 window.onload = function () {
