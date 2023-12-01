@@ -463,5 +463,5 @@ app.get('/service', function(req, res){
         res.sendFile(__dirname + "/Views/html/service.html");
     } else{
         res.status(400).json();
-    }   
+    }
 })
