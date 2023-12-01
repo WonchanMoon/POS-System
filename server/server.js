@@ -448,28 +448,28 @@ app.get('/login', function (req, res) {
   }
 });
 
-app.get('/business', function (req, res) {
-  console.log('business page');
-  if (globalID) {
-    res.sendFile(__dirname + '/Views/html/business.html');
-  } else {
-    res.status(400).json();
-  }
-});
+app.get('/business', function(req, res){
+    console.log("business page");
+    if(globalID){
+        res.sendFile(__dirname + "/Views/html/business.html");
+    } else{
+        res.redirect('/login');
+    }
+})
 
-app.get('/sales', function (req, res) {
-  console.log('sales page');
-  if (globalID) {
-    res.sendFile(__dirname + '/Views/html/sales1.html');
-  } else {
-    res.status(400).json();
-  }
-});
-app.get('/service', function (req, res) {
-  console.log('service page');
-  if (globalID) {
-    res.sendFile(__dirname + '/Views/html/service.html');
-  } else {
-    res.status(400).json();
-  }
-});
+app.get('/sales', function(req, res){
+    console.log("sales page");
+    if(globalID){
+    res.sendFile(__dirname + "/Views/html/sales1.html");
+    } else{
+        res.redirect('/login');
+    }
+})
+app.get('/service', function(req, res){
+    console.log("service page");
+    if(globalID){
+        res.sendFile(__dirname + "/Views/html/service.html");
+    } else{
+        res.redirect('/login');
+    }
+})
