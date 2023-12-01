@@ -61,12 +61,13 @@ function login() {
   } else {
     $.ajax({
     type: 'POST', 
-    url: '/login', 
+    url: '/login',
+    async: false,
     data: {"ID": id, "password": password},
     success: function(response) {
       console.log(response.message);
       alert('로그인 성공!');
-      //window.location.href = '/sales';
+      // window.location.href = '/business';
     },
   })}
 }

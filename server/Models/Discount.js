@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const discountSchema = mongoose.Schema({
+  ID: {
+    type: String,
+    trim: true, // space 없애줌
+    // required: true,
+  },
   PID: {
     type: String,
     trim: true, // space 없애줌
