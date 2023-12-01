@@ -19,11 +19,11 @@ app.use(express.json()); // application/json
 app.use(express.static(path.join(__dirname, 'Views')));
 app.use('/', router);
 
-app.use(session({
-    secret: 'secret-key',
-    resave: true,
-    saveUninitialized: true,
-}));
+// app.use(session({
+//     secret: 'secret-key',
+//     resave: true,
+//     saveUninitialized: true,
+// }));
 
 // ejs
 app.set('view engine', 'ejs'); //view engine이 사용할 Template Engine
@@ -45,25 +45,28 @@ connect();
 
 const { Product } = require('./Models/Product'); // importing product
 const { User } = require('./Models/User'); //importing user
-const { Discount } = require('./Models/Discount'); //importing user
+const { Discount } = require('./Models/Discount'); //importing discount
+const { Sales } = require('./Models/Sales'); //importing sales
+
 
 app.post('/register', async (req, res) => {
     try {
-        const { ID, password, name, role } = req.body;
-      
+        const ID = req.body.ID;
+        console.log(req.body);
         // verify if the user already exists
         const existingUser = await User.findOne({ ID });
         if (existingUser) {
-            return res.status(400).json({ error: 'ID already in use' });
-        }
-  
-        // create a new user
-        const newUser = new User({ ID, password, name, role });
+            res.status(400).json({ error: 'ID already in use' });
+        } else {
+            // create a new user
+        const newUser = new User( req.body );
   
         // saving user
-        //await newUser.save();
-  
-        res.status(201).json({ message: 'Registration successful' });
+        const result = await newUser.save();
+        console.log("register success");
+        res.json(result);
+        // res.status(200).json({ message: 'Registration successful' });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: `Error in registering the user: ${error.message}` });
@@ -111,7 +114,7 @@ app.post('/products', async (req, res) => {
     try {
         // Create a new document using the Product model
         const newProduct = new Product(
-        req.body        
+        req.body   
         );
 
         // Save the new product to the database
@@ -293,6 +296,103 @@ app.put('/discount/name/:productName', async (req, res) => {
 });
 //curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple   
 
+
+
+// Path to add a new sales
+app.post('/salesList', async (req, res) => {
+    try {
+        console.log(req.body);
+        // Create a new document using the Product model
+        const newSales = new Sales(
+        req.body
+        );
+        console.log(req.body);
+        // Save the new product to the database
+        const result = await newSales.save();
+
+        res.json(result); // Return the result as JSON
+    } catch (error) {
+        res.status(500).json({ error: 'Error the sales could not be added' });
+    }
+});
+//curl -X POST -H "Content-Type: application/json" -d '{"name": "고기", "price": 5000}' http://localhost:8000/products
+
+// 미정
+app.delete('/salesList/name/:productName', async (req, res) => {
+    try {
+        const productName = req.params.productName;
+
+       // Use the findOneAndDelete method to delete the product by name
+        const result = await Discount.findOneAndDelete({ name: productName });
+
+        if (result) {
+            res.json({ message: 'Discount deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'Discount not found' });
+        }
+    } catch (error) {
+        console.error(error);  
+        res.status(500).json({ error: 'Error at deleting discount' });
+    }
+});
+//curl -X DELETE http://localhost:8000/products/name/bread 
+
+// Path to get all products
+app.get('/salesList', async (req, res) => {
+    try {
+        const sales = await Sales.find({});
+
+        res.json(sales); // Returns the products in JSON format
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching sales' });
+    }
+});
+//curl http://localhost:8000/products
+
+// route to get the current values of a product by name
+app.get('/discount/name/:productName', async (req, res) => {
+    try {
+        const productName = req.params.productName;
+       
+        const discount = await Discount.findOne({ name: productName });
+
+        if (discount) {
+            res.json(discount);
+        } else {
+            res.status(404).json({ error: 'Discount not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching discount' });
+    }
+});
+//curl http://localhost:8000/products/name/apple 
+
+// route to update a product by name
+app.put('/discount/name/:productName', async (req, res) => {
+    try {
+        const productName = req.params.productName;
+        const { newDiscountNum, newDate } = req.body;
+
+        const result = await Discount.findOneAndUpdate(
+            { name: productName },
+            { $set: { discount: newDiscountNum, date: newDate } },
+            { new: true } // Returns the updated document
+        );
+
+        if (result) {
+            res.json(result);
+        } else {
+            res.status(404).json({ error: 'Discount not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error at updating Discount' });
+    }
+});
+//curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple   
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
@@ -313,7 +413,7 @@ app.get('/business', function(req, res){
 
 app.get('/sales', function(req, res){
     console.log("sales page");
-    res.sendFile(__dirname + "/Views/html/sales.html");
+    res.sendFile(__dirname + "/Views/html/sales1.html");
 })
 app.get('/service', function(req, res){
     console.log("service page");
