@@ -226,19 +226,15 @@ app.put('/products/name/:productName', async (req, res) => {
 
 app.put('/products/counts/:productName', async (req, res) => {
   try {
-    console.log(req.body);
     // const productName = req.params.productName;
-    const {ID, productName, newCounts } = req.body;
-    console.log(req.body);
-    const product = await Product.findOne({ ID: ID, name: productName });
+    const { name, counts } = req.body;
+
+    const product = await Product.findOne({ ID: globalID, name: name });
     var ncounts = product.counts;
     console.log(ncounts);
-    if (ncounts-newCounts<0){
-      throw error;
-    }
     const result = await Product.findOneAndUpdate(
-      { ID: globalID, name: productName },
-      { $set: {counts: (ncounts-newCounts) } },
+      { ID: globalID, name: name },
+      { $set: {counts: (ncounts-counts) } },
       { new: true } // Returns the updated document
     );
 
