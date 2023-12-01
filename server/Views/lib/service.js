@@ -285,8 +285,6 @@ function loadProducts() {
     data: {},
     dataType: 'json',
   }).done((result1) => {
-    console.log(result1);
-
     for (let i = 0; i < result1.length; i++) {
       $.ajax({
         type: 'GET',
@@ -294,8 +292,6 @@ function loadProducts() {
         data: {},
         dataType: 'json',
         success: function (result2) {
-          console.log(result2);
-          console.log(result2.discount);
           result1[i].discount = result2.discount;
         },
         error: function (error) {
@@ -309,6 +305,7 @@ function loadProducts() {
       });
     }
     console.log(result1);
+    setTimeout(function () {}, 2000);
     products = result1;
 
     var productCatalog = document.querySelector('.product-catalog');
