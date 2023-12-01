@@ -365,7 +365,7 @@ function sendPaymentData() {
     },
   });
 
-  data.forEach(lowCounts(product));
+  data.forEach((product) => lowCounts(product));
   removeAllProducts();
 }
 
@@ -375,7 +375,7 @@ function lowCounts(product) {
     url: '/products/counts/' + product.name,
     type: 'PUT',
     contentType: 'application/json',
-    data: { counts: product.counts },
+    data: { productName: product.name, counts: product.counts },
     success: function (response) {
       console.log('successful:', response);
     },
