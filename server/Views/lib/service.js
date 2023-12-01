@@ -327,7 +327,7 @@ function loadProducts() {
         };
         productCatalog.appendChild(productButton);
       });
-    }, 2000);
+    }, 1000);
   });
 }
 
