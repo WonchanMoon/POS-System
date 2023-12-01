@@ -7,7 +7,7 @@ const salesSchema = mongoose.Schema({  // schema 작성
     required: true,
   },
   date: {
-    type: Date,
+    type: String,
     default: Date.now, // 추가 시점
     expires:60*60*24*90, // 30일 기한
   },
