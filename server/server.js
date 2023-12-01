@@ -73,21 +73,16 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { ID, password } = req.body;
-        
+
         if(req.session.user) {
-            res.redirect('/Views/html/inter.html');
+            res.sendFile(__dirname + '/Views/html/inter.html');
         } else {
             // Search the user by ID
             const user = await User.findOne({ ID });
 
             // Check if the user exists and the password is correct
             if (user && user.password === password) {
-                // generate token --> in any case if we need like to check that it is the admin I guess so he can edit the products
-                //FIGURE IT OUT LATER
-                const token = jwt.sign({ userId: user._id, ID: user.ID }, 'secret_key', { expiresIn: '1h' });
-
-                // give the token to the user
-                res.json({ token });
+                req.session.userId = user;
             } else {
                 res.status(401).json({ error: 'Incorrect credentials' });
             }

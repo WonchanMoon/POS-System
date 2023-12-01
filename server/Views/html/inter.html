@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../lib/global.css" type="text/css">
+  <title>POS System</title>
+</head>
+
+<body>
+  <div id="content"></div>
+
+  <script>
+    function loadPage(pageName) {
+      // Load content based on the button clicked
+      const contentDiv = document.getElementById('content');
+      const xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          contentDiv.innerHTML = xhr.responseText;
+        }
+      };
+
+      xhr.open('GET', pageName + '.html', true);
+      xhr.send();
+    }
+  </script>
+
+  <button onclick="loadPage('service')">판매 관리</button>
+  <button onclick="loadPage('sales')">매출 현황</button>
+  <button onclick="loadPage('business')">영업 관리</button>
+</body>
+</html>
