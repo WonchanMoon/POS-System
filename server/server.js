@@ -224,6 +224,31 @@ app.put('/products/name/:productName', async (req, res) => {
 });
 //curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple
 
+app.put('/products/counts/:productName', async (req, res) => {
+  try {
+    const productName = req.params.productName;
+    const { newCounts } = req.body;
+    const product = await Product.findOne({ ID: globalID, name: productName });
+    var ncounts = product.counts;
+    const result = await Product.findOneAndUpdate(
+      { ID: globalID, name: productName },
+      { $set: {counts: ncounts-newCounts } },
+      { new: true } // Returns the updated document
+    );
+
+    if (result) {
+      res.json(result);
+    } else {
+      res.status(404).json({ error: 'Product not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error at updating product' });
+  }
+});
+//curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple
+
+
 // Path to add a new discount
 app.post('/discount', async (req, res) => {
   post = Object.assign(req.body, { ID: globalID });
@@ -336,7 +361,7 @@ app.put('/discount/name/:productName', async (req, res) => {
 app.post('/salesList', async (req, res) => {
   try {
     // Create a new document using the Product model
-    post = Object.assign(req.body, { ID: globalID , date : dateNow});
+    post = Object.assign(req.body, {ID: globalID , date : dateNow});
     const newSales = new Sales(
       // req.body
       post
