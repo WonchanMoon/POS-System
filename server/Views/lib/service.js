@@ -308,7 +308,7 @@ function loadProducts() {
         },
       });
     }
-
+    console.log(result1);
     products = result1;
 
     var productCatalog = document.querySelector('.product-catalog');
