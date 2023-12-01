@@ -83,7 +83,7 @@ app.post('/login', async (req, res) => {
             // Search the user by ID
             const user = await User.findOne({ ID });
             // Check if the user exists and the password is correct
-            if (user && user.password == password) {
+            if (user && (await bcrypt.compare(password, user.password))) {
                 globalID = user.ID;
                 res.status(200).json({ messagee: 'login success' });
             } else {
