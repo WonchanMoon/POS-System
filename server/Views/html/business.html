@@ -161,7 +161,9 @@
         #pagination button {
           margin: 0 5px; /* 각 버튼 간의 여백 조절, 필요에 따라 조절하세요. */
         }
-
+        .special-item {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -176,6 +178,7 @@
         <li><a href="/service">판매 관리</a></li>
         <li><a href="/sales">매출 현황</a></li>
         <li><a href="/business">영업 관리</a></li>
+        <li><a href="/logout" class = "special-item">로그아웃</a></li>
       </ul>
     </nav>
 
@@ -466,7 +469,7 @@
       price = $('#productPrice').val();
       counts = $('#productQuantity').val();
       
-      if (id == "" || name == "" || price == "" || counts == "") {
+      if (name == "" || price == "" || counts == "") {
         alert('항목을 모두 작성하세요.');
       }
       else {
@@ -636,10 +639,12 @@
     
     // 할인 제거 함수
     function delDiscount(){
+      name = $('#d_delProductName').val();
       $.ajax({
       type: 'DELETE',
-      url: '/discount/name/' + $('#d_delProductName').val(),
+      url: '/discount/name/' + name,
       data: {
+        "name": name
       },
       dataType: "json"
       }).done((result)=>{
