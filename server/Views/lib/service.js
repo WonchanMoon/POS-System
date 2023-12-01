@@ -287,15 +287,17 @@ function loadProducts() {
   }).done((result1) => {
     console.log(result1);
 
-    $.ajax({
-      type: 'GET',
-      url: '/discount/name/' + '츄파츕스 사과맛',
-      data: {},
-      dataType: 'json',
-    }).done((result2) => {
-      console.log(result2);
-      //products = result2;
-    });
+    for (let i = 0; i < products.length; i++) {
+      $.ajax({
+        type: 'GET',
+        url: '/discount/name/' + result1[i].name,
+        data: {},
+        dataType: 'json',
+      }).done((result2) => {
+        console.log(result2);
+        result1[i].discount = result2.discount;
+      });
+    }
 
     products = result1;
 
