@@ -291,6 +291,18 @@ function loadProducts() {
     // 더 많은 상품...
   ];
 
+  $.ajax({
+    type: 'GET',
+    url: '/products',
+    data: {},
+    dataType: 'json',
+  }).done((result) => {
+    console.log(result);
+    console.log(result.message);
+  });
+
+  var example = {};
+
   var productCatalog = document.querySelector('.product-catalog');
   products.forEach(function (product) {
     var productButton = document.createElement('button');
