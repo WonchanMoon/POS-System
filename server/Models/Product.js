@@ -4,7 +4,6 @@ const productSchema = mongoose.Schema({  // schema 작성
   ID: {
     type: String,
     trim: true, // space 없애줌
-    unique: 1, // 유일
     // required: true,
   },
   name: {
