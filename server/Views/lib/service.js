@@ -304,10 +304,9 @@ function loadProducts() {
         },
       });
     }
-    console.log(result1);
+
     setTimeout(function () {
       products = result1;
-
       var productCatalog = document.querySelector('.product-catalog');
       products.forEach(function (product) {
         var productButton = document.createElement('button');
@@ -329,6 +328,36 @@ function loadProducts() {
       });
     }, 1000);
   });
+}
+
+// 결제 요청보내기
+function sendPaymentData() {
+  var table = document.getElementById('productTable');
+  var data = [];
+
+  // 테이블의 각 행을 순회
+  for (var i = 1; i < table.rows.length; i++) {
+    var row = table.rows[i];
+    var name = row.cells[1].innerHTML; // 상품명
+    var price = parseInt(row.cells[2].innerHTML); // 단가
+    var counts = parseInt(row.cells[3].innerHTML); // 수량
+
+    data.push({ name: name, price: price, counts: counts });
+  }
+
+  console.log(data);
+  // $.ajax({
+  //   url: '/your-payment-api-endpoint',
+  //   type: 'POST',
+  //   contentType: 'application/json',
+  //   data: JSON.stringify(data),
+  //   success: function (response) {
+  //     console.log('Payment successful:', response);
+  //   },
+  //   error: function (error) {
+  //     console.error('Payment failed:', error);
+  //   },
+  // });
 }
 
 window.onload = function () {
