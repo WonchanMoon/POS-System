@@ -375,7 +375,7 @@ function lowCounts(product) {
     url: '/products/counts/' + product.name,
     type: 'PUT',
     contentType: 'application/json',
-    data: { productName: product.name, counts: product.counts },
+    data: { counts: product.counts },
     success: function (response) {
       console.log('successful:', response);
     },
