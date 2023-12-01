@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>POS</title>
     <!-- 부트스트랩 CDN을 이용하여 스타일을 불러옵니다. -->
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
@@ -10,27 +10,27 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <style>
-        * {
-          box-sizing: border-box;
-        }
+      * {
+        box-sizing: border-box;
+      }
 
-        body {
-          background-color: #bdbdbd;
-          font-family: 'Open Sans', sans-serif;
-          margin: 0;
-          cursor: default;
-        }
-        a {
-          text-decoration: none;
-          color: #ffffff;
-        }
+      body {
+        background-color: #bdbdbd;
+        font-family: 'Open Sans', sans-serif;
+        margin: 0;
+        cursor: default;
+      }
+      a {
+        text-decoration: none;
+        color: #ffffff;
+      }
 
-        ul {
-          list-style: none;
-          padding-left: 0;
-        }
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
 
-        /* button {
+      /* button {
           font-family: 'Open Sans', sans-serif;
           background-color: transparent;
           cursor: pointer;
@@ -38,268 +38,287 @@
           outline: none;
         } */
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 5px;
-            text-align: center;
-        }
+      header {
+        background-color: #333;
+        color: white;
+        padding: 5px;
+        text-align: center;
+      }
 
-        nav {
-            background-color: #444;
-            padding: 10px;
-        }
+      nav {
+        background-color: #444;
+        padding: 10px;
+      }
 
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+      }
 
-        nav li {
-            margin: 0 30px;
-        }
+      nav li {
+        margin: 0 30px;
+      }
 
-        nav a {
-            text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      nav a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        section {
-            margin: 20px;
-            padding: 20px;
-            background-color: #ddd;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+      section {
+        margin: 20px;
+        padding: 20px;
+        background-color: #ddd;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
 
-        table, th, td {
-            border: 1px solid #7c7979;
-        }
+      table,
+      th,
+      td {
+        border: 1px solid #7c7979;
+      }
 
-        th, td {
-            padding: 15px;
-            text-align: left;
-        }
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+      }
 
-        th {
-            background-color: #333;
-            color: white;
-        }
+      th {
+        background-color: #333;
+        color: white;
+      }
 
-        tr:hover {
-            background-color: #f5f5f5;
-        }
+      tr:hover {
+        background-color: #f5f5f5;
+      }
 
-        button {
-            background-color: #f7ae34;
-            color: 000000;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+      button {
+        background-color: #f7ae34;
+        color: 000000;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-        button:hover {
-            background-color: #f7ae34;
-        }
-        /* 모달 스타일 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            margin: auto;
-            text-align: center;
-        }
+      button:hover {
+        background-color: #f7ae34;
+      }
+      /* 모달 스타일 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background-color: #fefefe;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: auto;
+        text-align: center;
+      }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+      }
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
 
-        #pagination {
-          text-align: center;
-          margin-top: 10px; /* 필요에 따라 조절하세요. */
-        } 
+      #pagination {
+        text-align: center;
+        margin-top: 10px; /* 필요에 따라 조절하세요. */
+      }
 
-        #pagination button {
-          margin: 0 5px; /* 각 버튼 간의 여백 조절, 필요에 따라 조절하세요. */
-        }
-        .chart-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* height: 100vh; */
-        }
-        .special-item {
-            color: red;
-        }
-
+      #pagination button {
+        margin: 0 5px; /* 각 버튼 간의 여백 조절, 필요에 따라 조절하세요. */
+      }
+      .chart-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* height: 100vh; */
+      }
+      .special-item {
+        color: red;
+      }
     </style>
-</head>
-<body class="bg-light">
+  </head>
+  <body class="bg-light">
     <header>
-        <img src="../imgs/logo.png" width = "400"/>
+      <img src="../imgs/logo.png" width="400" />
     </header>
     <nav>
       <ul>
         <li><a href="/service">판매 관리</a></li>
         <li><a href="/sales">매출 현황</a></li>
         <li><a href="/business">영업 관리</a></li>
-        <li><a href="/logout" class = "special-item">로그아웃</a></li>
+        <li><a href="/logout" class="special-item">로그아웃</a></li>
       </ul>
     </nav>
     <section>
-        <h2>상품별 매출 차트 (상위 5개)</h2>
-        <div class="chart-container">
-            <canvas id="salesChart" width="400" height="400" class="mx-auto d-block"></canvas>
-        </div>
+      <h2>상품별 매출 차트 (상위 5개)</h2>
+      <div class="chart-container">
+        <canvas
+          id="salesChart"
+          width="400"
+          height="400"
+          class="mx-auto d-block"
+        ></canvas>
+      </div>
     </section>
-    
+
     <section>
-        <h2>판매 상품 목록</h2>
-        <table id="salesTable"></table>
-        <div id="pagination">
-            <button onclick="changePage(-1)">이전</button>
-            <span id="currentPage">1</span>
-            <button onclick="changePage(1)">다음</button>
-          </div>
+      <h2>판매 상품 목록</h2>
+      <table id="salesTable"></table>
+      <div id="pagination">
+        <button onclick="changePage(-1)">이전</button>
+        <span id="currentPage">1</span>
+        <button onclick="changePage(1)">다음</button>
+      </div>
     </section>
     <script>
-        var G_List;
-        // 판매 테이블 페이징
-        const itemsPerPage = 5;
-        let currentPage = 1;
+      var G_List;
+      // 판매 테이블 페이징
+      const itemsPerPage = 5;
+      let currentPage = 1;
 
-        function renderTable(page) {
+      function renderTable(page) {
         const table = document.getElementById('salesTable');
         $.ajax({
-        type: 'GET',
-        url: '/salesList',
-        async: false,
-        data: {
-        },
-        dataType: "json"
-        }).done((result) =>{
-            var List = flat(result);
-            G_List = List;
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            dataToShow = List.slice(start, end);
-            // 이전 데이터를 지우고 새로운 데이터를 추가
-            table.innerHTML = "<thead><tr><th>날짜</th><th>상품명</th><th>단가</th><th>수량</th><th>총액</th></thead><tbody>";
-            dataToShow.forEach(item => {
-                const row = `<tr><td>${item.date}</td><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td><td>${item.price*item.counts}</td></tr>`;
-                table.innerHTML += row;
-            });
-            table.innerHTML += "</tbody>";
-            document.getElementById('currentPage').innerText = page; 
-        })
+          type: 'GET',
+          url: '/salesList',
+          async: false,
+          data: {},
+          dataType: 'json',
+        }).done((result) => {
+          var List = flat(result);
+          G_List = List;
+          const start = (page - 1) * itemsPerPage;
+          const end = start + itemsPerPage;
+          dataToShow = List.slice(start, end);
+          // 이전 데이터를 지우고 새로운 데이터를 추가
+          table.innerHTML =
+            '<thead><tr><th>날짜</th><th>상품명</th><th>단가</th><th>수량</th><th>총액</th></thead><tbody>';
+          dataToShow.forEach((item) => {
+            const row = `<tr><td>${item.date}</td><td>${item.name}</td><td>${
+              item.price
+            }</td><td>${item.counts}</td><td>${
+              item.price * item.counts
+            }</td></tr>`;
+            table.innerHTML += row;
+          });
+          table.innerHTML += '</tbody>';
+          document.getElementById('currentPage').innerText = page;
+        });
+      }
+      function changePage(diff) {
+        currentPage += diff;
+        if (currentPage < 1) {
+          currentPage = 1;
         }
-        function changePage(diff) {
-            currentPage += diff;
-            if (currentPage < 1) {
-                currentPage = 1;
-            }
-            renderTable(currentPage);
-        }
-        // 초기 테이블 렌더링
         renderTable(currentPage);
+      }
+      // 초기 테이블 렌더링
+      renderTable(currentPage);
 
-        function flat(result){
-            var dataToShow = [];
-            var len = result.length;
-            for(var i=0;i<len;i++){ // 날짜 얻기
-                var date = result[i].date;
-                var len2 = result[i].data.length;
-                for(var j = 0; j < len2; j++){ // 날짜의 상품 목록 얻기
-                    var name = result[i].data[j].name;
-                    var price = result[i].data[j].price;
-                    var counts = result[i].data[j].counts;
-                    dataToShow.push({"name":name, "price":price, "counts":counts, "date":date}); // 병합
-                }
-
-            }
-            return dataToShow;
+      function flat(result) {
+        var dataToShow = [];
+        var len = result.length;
+        for (var i = 0; i < len; i++) {
+          // 날짜 얻기
+          var date = result[i].date;
+          var len2 = result[i].data.length;
+          for (var j = 0; j < len2; j++) {
+            // 날짜의 상품 목록 얻기
+            var name = result[i].data[j].name;
+            var price = result[i].data[j].price;
+            var counts = result[i].data[j].counts;
+            dataToShow.push({
+              name: name,
+              price: price,
+              counts: counts,
+              date: date,
+            }); // 병합
+          }
         }
-        
-        // 차트를 그리는 JavaScript 코드
-        const resultObject = {};
+        return dataToShow;
+      }
 
-        G_List.forEach(item => {
+      // 차트를 그리는 JavaScript 코드
+      const resultObject = {};
+
+      G_List.forEach((item) => {
         const { name, price, counts } = item;
         const priceCounts = price * counts;
 
         if (resultObject[name]) {
-            resultObject[name] += priceCounts;
+          resultObject[name] += priceCounts;
         } else {
-            resultObject[name] = priceCounts;
+          resultObject[name] = priceCounts;
         }
-        });
+      });
 
-        const sortedResultArray = Object.entries(resultObject)
-        .sort((a, b) => b[1] - a[1]);
+      const sortedResultArray = Object.entries(resultObject).sort(
+        (a, b) => b[1] - a[1]
+      );
 
-        const namesArray = sortedResultArray.map(([name, total]) => name);
-        const totalPricesArray = sortedResultArray.map(([name, total]) => total);
+      const namesArray = sortedResultArray.map(([name, total]) => name);
+      const totalPricesArray = sortedResultArray.map(([name, total]) => total);
 
-        var ctx = document.getElementById('salesChart').getContext('2d');
-        var salesChart = new Chart(ctx, {
-            type: 'doughnut', // 원형 차트 설정
-            data: {
-                labels: namesArray.slice(0, 5), // 상품명을 라벨로 사용
-                datasets: [{
-                    data: totalPricesArray.slice(0, 5), // 매출액을 데이터로 사용
-                }]
+      var ctx = document.getElementById('salesChart').getContext('2d');
+      var salesChart = new Chart(ctx, {
+        type: 'doughnut', // 원형 차트 설정
+        data: {
+          labels: namesArray.slice(0, 5), // 상품명을 라벨로 사용
+          datasets: [
+            {
+              data: totalPricesArray.slice(0, 5), // 매출액을 데이터로 사용
             },
-            options :{
-                responsive: false,
-            }
-        });
-    window.addEventListener('beforeunload', function (event) {
-      $.ajax({
-      type: 'GET',
-      url: '/logout',
-      data: {
-      },
-      dataType: "json"
-      })
-    });
+          ],
+        },
+        options: {
+          responsive: false,
+        },
+      });
+      // window.addEventListener('beforeunload', function (event) {
+      //   $.ajax({
+      //   type: 'GET',
+      //   url: '/logout',
+      //   data: {
+      //   },
+      //   dataType: "json"
+      //   })
+      // });
     </script>
-
-</body>
+  </body>
 </html>
