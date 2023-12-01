@@ -278,26 +278,27 @@ function clearReceivedAmount() {
 
 // 상품을 로드하고 표시하는 함수
 function loadProducts() {
-  // var products = [
-  //   { name: '상품 A', price: 1000, discount: 10 },
-  //   { name: '상품 B', price: 1500, discount: 5 },
-  //   { name: '상품 C', price: 2000, discount: 0 },
-  //   { name: '상품 D', price: 2000, discount: 0 },
-  //   { name: '상품 E', price: 2000, discount: 0 },
-  //   { name: '상품 F', price: 2000, discount: 0 },
-  //   { name: '상품 G', price: 2000, discount: 0 },
-  //   { name: '상품 H', price: 2000, discount: 0 },
-  // ];
-
   var products = [];
   $.ajax({
     type: 'GET',
     url: '/products',
     data: {},
     dataType: 'json',
-  }).done((result) => {
-    console.log(result);
-    products = result;
+  }).done((result1) => {
+    console.log(result1);
+
+    $.ajax({
+      type: 'GET',
+      url: '/discount/name/' + '츄파츕스 사과맛',
+      data: {},
+      dataType: 'json',
+    }).done((result2) => {
+      console.log(result2);
+      //products = result2;
+    });
+
+    products = result1;
+
     var productCatalog = document.querySelector('.product-catalog');
     products.forEach(function (product) {
       var productButton = document.createElement('button');
@@ -322,7 +323,6 @@ function loadProducts() {
 
 window.onload = function () {
   loadProducts();
-  loadExampleProducts();
   addClickEventToRows();
   updateAmounts();
 };
