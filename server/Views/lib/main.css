@@ -44,7 +44,12 @@
 
 body {
   /* background-color: var(--color-light-black); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   font-family: 'Open Sans', sans-serif;
+  height: 80vh;
   margin: 0;
   cursor: default;
 }

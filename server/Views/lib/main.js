@@ -52,21 +52,21 @@ function signUp() {
   }
 }
 
-// function signUp() {
-//   var id = document.querySelector('.sign-up-container input[placeholder="ID"]').value;
-//   var password = document.querySelector('.sign-up-container input[placeholder="Password"]').value;
+function login() {
+  var id = document.querySelector('.sign-in-container input[placeholder="ID"]').value;
+  var password = document.querySelector('.sign-in-container input[placeholder="Password"]').value;
 
-//   if (!id || !password) {
-//     alert('모든 빈칸을 채워주세요.');
-//   } else {
-//     $.ajax({
-//     type: 'POST', 
-//     url: '/login', 
-//     data: {"ID": id, "password": password}
-//     }).done((result)=>{
-//       console.log(result);
-//       console.log(result.message);
-//       alert('로그인 성공!');
-//     })
-//   }
-// }
+  if (!id || !password) {
+    alert('모든 빈칸을 채워주세요.');
+  } else {
+    $.ajax({
+    type: 'POST', 
+    url: '/login', 
+    data: {"ID": id, "password": password},
+    success: function(response) {
+      console.log(response.message);
+      alert('로그인 성공!');
+      //window.location.href = '/sales';
+    },
+  })}
+}

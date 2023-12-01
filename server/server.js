@@ -3,12 +3,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken'); 
 const path = require('path');
-const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT;
-const router = express.Router();
+var globalID = null;
 
 // Middleware to parse the body of requests in JSON format
 app.use(bodyParser.json());
@@ -17,13 +16,6 @@ app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlen
 app.use(express.json()); // application/json
 // app.use(express.static("./Views/lib"));
 app.use(express.static(path.join(__dirname, 'Views')));
-app.use('/', router);
-
-// app.use(session({
-//     secret: 'secret-key',
-//     resave: true,
-//     saveUninitialized: true,
-// }));
 
 // ejs
 app.set('view engine', 'ejs'); //view engine이 사용할 Template Engine
@@ -76,17 +68,20 @@ app.post('/register', async (req, res) => {
 // Path to login
 app.post('/login', async (req, res) => {
     try {
-        const { ID, password } = req.body;
-
-        if(req.session.user) {
-            res.sendFile(__dirname + '/Views/html/inter.html');
+        if(globalID){
+            console.log("session exists");
+            //res.status(200).json({ messagee: 'login success' });
+            res.redirect('/sales');
         } else {
+            const { ID, password } = req.body;
+
             // Search the user by ID
             const user = await User.findOne({ ID });
-
             // Check if the user exists and the password is correct
             if (user && user.password === password) {
-                req.session.userId = user;
+                globalID = user.ID;
+                //res.status(200).json({ messagee: 'login success' });
+                res.redirect('/sales');
             } else {
                 res.status(401).json({ error: 'Incorrect credentials' });
             }
@@ -403,7 +398,11 @@ console.log('Using collection:', Product.collection.name);
 // Views
 app.get('/login', function(req, res){
     console.log("index page");
-    res.sendFile(__dirname + "/Views/html/main.html");
+    if(!globalID) {
+        res.sendFile(__dirname + "/Views/html/main.html");
+    } else {
+        res.redirect('/sales');
+    }
 })
 
 app.get('/business', function(req, res){
