@@ -350,7 +350,7 @@ function sendPaymentData() {
     url: '/salesList',
     type: 'POST',
     contentType: 'application/json',
-    data: JSON.stringify(data),
+    data: data,
     success: function (response) {
       console.log('Payment successful:', response);
     },
