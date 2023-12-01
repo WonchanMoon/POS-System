@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS Business Management</title>
+    <title>POS</title>
     <style>
         /* body {
             font-family: Arial, sans-serif;
@@ -17,7 +17,7 @@
         }
 
         body {
-          /* background-color: var(--color-light-black); */
+          background-color: #bdbdbd;
           font-family: 'Open Sans', sans-serif;
           margin: 0;
           cursor: default;
@@ -74,7 +74,7 @@
         section {
             margin: 20px;
             padding: 20px;
-            background-color: white;
+            background-color: #ddd;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -87,7 +87,7 @@
         }
 
         table, th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #7c7979;
         }
 
         th, td {
@@ -105,8 +105,8 @@
         }
 
         button {
-            background-color: #4caf50;
-            color: white;
+            background-color: #f7ae34;
+            color: 000000;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -114,7 +114,7 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #f7ae34;
         }
         /* 모달 스타일 */
         .modal {
@@ -167,13 +167,13 @@
 <body>
   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     <header>
-        <h1>POS - Business Management</h1>
+        <h1>영업 관리</h1>
     </header>
 
     <nav>
       <ul>
         <li><a href="/">메인</a></li>
-        <li><a href="/">판매 관리</a></li>
+        <li><a href="/service">판매 관리</a></li>
         <li><a href="/sales">매출 현황</a></li>
         <li><a href="/business">영업 관리</a></li>
       </ul>
@@ -183,9 +183,8 @@
         <h2>재고 목록</h2>
 
         <button onclick="openModal('inventoryModal')">상품 추가</button>
-        <button onclick="openModal('fixModal')">상품/이벤트 수정</button>
+        <button onclick="openModal('fixModal')">상품 수정</button>
         <button onclick="openModal('delModal')">상품 제거</button>
-        <!-- <button onclick="openModal('saleModal')">이벤트 추가</button> -->
 
         <table id="inventoryTable"></table>
         <div id="pagination">
@@ -224,26 +223,6 @@
                 </form>
             </div>
         </div>
-        <div id="saleModal" class="modal">
-          <div class="modal-content">
-              <span class="close" onclick="closeModal('saleModal')">&times;</span>
-              <h2>이벤트 추가</h2>
-              <!-- 세일 추가 폼 또는 내용을 입력할 부분 -->
-              <form>
-                <div style="margin-bottom: 15px;">
-                  <label for="saleProductName">상품명:</label>
-                  <input type="text" id="saleProductName" name="saleProductName" required>
-                </div>
-                <div style="margin-bottom: 15px;">
-                  <label for="saleEvent">추가할 이벤트:</label>
-                  <input type="String" id="saleEvent" name="saleEvent" required>
-                </div>
-                <div style="text-align: right;">
-                  <button type="button" onclick="addsale()">추가</button>
-                </div>
-              </form>
-          </div>
-        </div>
         <div id="delModal" class="modal">
           <div class="modal-content">
               <span class="close" onclick="closeModal('delModal')">&times;</span>
@@ -265,31 +244,112 @@
               <h2>상품 수정</h2>
               <form>
                 <div style="margin-bottom: 15px;">
-                  <label for="productName">(필수)현재 상품명:</label>
+                  <label for="productName">현재 상품명:</label>
                   <input type="text" id="originalProductName" name="productName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="ProductCategory">카테고리 수정:</label>
+                  <label for="fixProductCategory">카테고리 수정:</label>
                   <input type="text" id="fixProductCategory" name="ProductCategory" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="productName">(필수)상품명 수정:</label>
+                  <label for="productName">상품명 수정:</label>
                   <input type="text" id="fixProductName" name="productName" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="productPrice">(필수)단가 수정:</label>
+                  <label for="productPrice">단가 수정:</label>
                   <input type="number" id="fixProductPrice" name="productPrice" required>
                 </div>
                 <div style="margin-bottom: 15px;">
-                  <label for="productQuantity">(필수)수량 수정:</label>
+                  <label for="productQuantity">수량 수정:</label>
                   <input type="number" id="fixProductQuantity" name="productQuantity" required>
-                </div>
-                <div style="margin-bottom: 15px;">
-                  <label for="saleEvent">이벤트 수정:</label>
-                  <input type="String" id="fixProductEvent" name="fixProductEvent" required>
                 </div>
                 <div style="text-align: right;">
                   <button type="button" onclick="fixProduct()">수정</button>
+                </div>
+              </form>
+          </div>
+        </div>
+    </section>
+
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
+    <section>
+      <h2>할인 목록</h2>
+
+        <button onclick="openModal('discountModal')">할인 추가</button>
+        <button onclick="openModal('d_fixModal')">할인 수정</button>
+        <button onclick="openModal('d_delModal')">할인 제거</button>
+
+        <table id="discountTable"></table>
+        <div id="pagination">
+          <button onclick="d_changePage(-1)">이전</button>
+          <span id="d_currentPage">1</span>
+          <button onclick="d_changePage(1)">다음</button>
+        </div>
+
+        <!-- 모달 창 -->
+        <div id="discountModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('discountModal')">&times;</span>
+                <h2>할인 추가</h2>
+                <form>
+                  <div style="margin-bottom: 15px;">
+                    <label for="d_productName">상품명:</label>
+                    <input type="text" id="d_productName" name="d_productName" required>
+                  </div>
+                  <div style="margin-bottom: 15px;">  
+                    <label for="discountNum">할인(%):</label>
+                    <input type="number" id="discountNum" name="discountNum" required>
+                  </div>
+                  <div style="margin-bottom: 15px;">
+                    <label for="discountDate">기한:</label>
+                    <input type="date" id="discountDate" name="discountDate" required>
+                  </div>
+        
+                  <div style="text-align: right;">
+                    <button type="button" onclick="addDiscount()">추가</button>
+                  </div>
+                </form>
+            </div>
+        </div>
+        <div id="d_delModal" class="modal">
+          <div class="modal-content">
+              <span class="close" onclick="closeModal('d_delModal')">&times;</span>
+              <h2>할인 제거</h2>
+              <form>
+                <div style="margin-bottom: 15px;">
+                  <label for="d_delProductName">상품명:</label>
+                  <input type="text" id="d_delProductName" name="d_delProductName" required>
+                </div>
+                <div style="text-align: right;">
+                  <button type="button" onclick="delDiscount()">제거</button>
+                </div>
+              </form>
+          </div>
+        </div>
+        <div id="d_fixModal" class="modal">
+          <div class="modal-content">
+              <span class="close" onclick="closeModal('d_fixModal')">&times;</span>
+              <h2>할인 수정</h2>
+              <form>
+                <div style="margin-bottom: 15px;">
+                  <label for="d_originalProductName">상품명:</label>
+                  <input type="text" id="d_originalProductName" name="d_originalProductName" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                  <label for="fixDiscountNum">할인 수정:</label>
+                  <input type="number" id="fixDiscountNum" name="fixDiscountNum" required>
+                </div>
+                <div style="margin-bottom: 15px;">
+                  <label for="fixDiscountDate">기한 수정:</label>
+                  <input type="date" id="fixDiscountDate" name="fixDiscountDate" required>
+                </div>
+                <div style="text-align: right;">
+                  <button type="button" onclick="fixDiscount()">수정</button>
                 </div>
               </form>
           </div>
@@ -311,31 +371,30 @@
     // 모달 외부 클릭 시 모달 닫기
     window.onclick = function(event) {
         var inventoryModal = document.getElementById('inventoryModal');
-        var saleModal = document.getElementById('saleModal');
         var delModal = document.getElementById('delModal');
         var fixMidal = document.getElementById('fixModal');
+        var discountModal = document.getElementById('discountModal');
+        var d_delModal = document.getElementById('d_delModal');
+        var d_fixMidal = document.getElementById('d_fixModal');
+
         if (event.target == inventoryModal) {
             inventoryModal.style.display = 'none';
         } 
-        else if (event.target == saleModal) {
-            saleModal.style.display = 'none';
-        }
         else if (event.target == delModal) {
             delModal.style.display = 'none';
         }
         else if (event.target == fixModal) {
             fixModal.style.display = 'none';
         }
+        else if (event.target == discountModal) {
+          discountModal.style.display = 'none';
+        }
     }
+
     // 모달 창 엔터키 작동
     document.getElementById('inventoryModal').addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
           addInventory();
-        }
-    });
-    document.getElementById('saleModal').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            addSale();
         }
     });
     document.getElementById('delModal').addEventListener('keydown', function(event) {
@@ -348,8 +407,23 @@
             fixProduct();
         }
     });
+    document.getElementById('discountModal').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+          addDiscount();
+        }
+    });
+    document.getElementById('d_delModal').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            delDiscount();
+        }
+    });
+    document.getElementById('d_fixModal').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            fixDiscount();
+        }
+    });
 
-    // 테이블 페이징
+    // 재고 테이블 페이징
     const itemsPerPage = 5;
     let currentPage = 1;
 
@@ -365,11 +439,10 @@
       const start = (page - 1) * itemsPerPage;
       const end = start + itemsPerPage;
       const dataToShow = result.slice(start, end);
-      console.log(dataToShow);
       // 이전 데이터를 지우고 새로운 데이터를 추가
-      table.innerHTML = "<thead><tr><th>카테고리</th><th>상품명</th><th>단가</th><th>수량</th><th>이벤트</th></thead><tbody>";
+      table.innerHTML = "<thead><tr><th>카테고리</th><th>상품명</th><th>단가</th><th>수량</th></thead><tbody>";
       dataToShow.forEach(item => {
-        const row = `<tr><td>${item.category}</td><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td><td>${item.event}</td></tr>`;
+        const row = `<tr><td>${item.category}</td><td>${item.name}</td><td>${item.price}</td><td>${item.counts}</td></tr>`;
         table.innerHTML += row;
       });
       table.innerHTML += "</tbody>";
@@ -385,7 +458,6 @@
     }
     // 초기 테이블 렌더링
     renderTable(currentPage);
-
 
     // 제품 추가 함수
     function addInventory() {
@@ -417,9 +489,6 @@
       }
     }
     
-    // 이벤트 추가 함수
-
-
     // 상품 제거 함수
     function delProduct(){
       $.ajax({
@@ -470,11 +539,144 @@
       }
     }
 
-    // 영어 지원 함수
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    // 할인 테이블 페이징
+    const d_itemsPerPage = 5;
+    let d_currentPage = 1;
+    function d_renderTable(page) {
+      const table = document.getElementById('discountTable');
+      $.ajax({
+      type: 'GET',
+      url: '/discount',
+      data: {
+      },
+      dataType: "json"
+      }).done((result) =>{
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const dataToShow = result.slice(start, end);
+      // 이전 데이터를 지우고 새로운 데이터를 추가
+      table.innerHTML = "<thead><tr><th>상품명</th><th>할인(%)</th><th>기한</th></thead><tbody>";
+      dataToShow.forEach(item => {
+        const row = `<tr><td>${item.name}</td><td>${item.discount}</td><td>${item.date.split('T')[0]}</td></tr>`;
+        table.innerHTML += row;
+      });
+      table.innerHTML += "</tbody>";
+      document.getElementById('d_currentPage').innerText = page;   
+      })
+    }
+    function d_changePage(diff) {
+        d_currentPage += diff;
+        if (d_currentPage < 1) {
+          d_currentPage = 1;
+        }
+        d_renderTable(d_currentPage);
+    }
+    // 초기 테이블 렌더링
+    d_renderTable(d_currentPage);
+
+    // 상품 _id 가져오기
+    function findPID(name) {
+      var PID;
+      $.ajax({
+      type: 'GET',
+      url: '/products/name/' + name,
+      data: {
+        "productName" : name
+      },
+      async: false, 
+      dataType: "json"
+      }).done((result)=>{
+        PID = result._id;
+      })
+      if(PID){
+        return PID;
+      }
+      return 0;
+    }
+
+    // 할인 추가 함수
+    function addDiscount() {
+      name = $('#d_productName').val();
+      discountNum = $('#discountNum').val();
+      date = $('#discountDate').val();
 
 
+      if (name == "" || discountNum == "" || date == "") {
+        alert('항목을 모두 작성하세요.');
+      }
+      else if (!findPID(name)){
+        alert("상품을 찾을 수 없습니다.");
+      }
+      else {
+        let PID = findPID(name);
+        $.ajax({
+        type: 'POST',
+        url: '/discount',
+        data: {
+          "PID" : PID,
+          "name" : name,
+          "discount" : discountNum,
+          "date" : date
+        },
+        dataType: "json"
+        }).done((result)=>{
+        console.log(result);
+        console.log(result.message);
+        alert('할인이 추가되었습니다.');
+        closeModal('discountModal');
+        })
+      }
+    }
+    
+    // 할인 제거 함수
+    function delDiscount(){
+      $.ajax({
+      type: 'DELETE',
+      url: '/discount/name/' + $('#d_delProductName').val(),
+      data: {
+      },
+      dataType: "json"
+      }).done((result)=>{
+      console.log(result);
+      console.log(result.message);
+      alert('할인이 제거되었습니다.');
+      closeModal('d_delModal');
+      })
+    }
 
-
+    // 할인 수정 함수
+    function fixDiscount(){
+      name = $('#d_originalProductName').val();
+      newDiscountNum = $('#fixDiscountNum').val();
+      newDate = $('#fixDiscountDate').val();
+      
+      if (name == "" || newDiscountNum == "" || newDate == ""){
+        alert('항목을 모두 작성하세요.');
+      }
+      else {
+        $.ajax({
+        type: 'PUT',
+        url: '/discount/name/' + name,
+        data: {
+          "productName" : name,
+          "newDiscountNum" : newDiscountNum,
+          "newDate" : newDate
+        },
+        dataType: "json"
+        }).done((result)=>{
+        console.log(result);
+        console.log(result.message);
+        alert('할인 수정되었습니다.');
+        closeModal('d_fixModal');
+        })
+      }
+    }
     </script>
 </body>
 </html>

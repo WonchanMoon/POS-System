@@ -45,7 +45,7 @@
 }
 
 body {
-  /* background-color: var(--color-light-black); */
+  background-color: var(--color-dark-white);
   font-family: 'Open Sans', sans-serif;
   margin: 0;
   cursor: default;

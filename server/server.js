@@ -43,8 +43,9 @@ async function connect(){
 
 connect();
 
-const { Product } = require('./Models/Product'); // 1. 지난 번 만들어 두었던 Product.js(스키마) 임포트
+const { Product } = require('./Models/Product'); // importing product
 const { User } = require('./Models/User'); //importing user
+const { Discount } = require('./Models/Discount'); //importing user
 
 app.post('/register', async (req, res) => {
     try {
@@ -198,6 +199,100 @@ app.put('/products/name/:productName', async (req, res) => {
 });
 //curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple   
 
+// Path to add a new discount
+app.post('/discount', async (req, res) => {
+    try {
+        console.log(req.body);
+        // Create a new document using the Product model
+        const newDiscount = new Discount(
+        req.body
+        );
+        console.log(req.body);
+        // Save the new product to the database
+        const result = await newDiscount.save();
+
+        res.json(result); // Return the result as JSON
+    } catch (error) {
+        res.status(500).json({ error: 'Error the discount could not be added' });
+    }
+});
+//curl -X POST -H "Content-Type: application/json" -d '{"name": "고기", "price": 5000}' http://localhost:8000/products
+
+app.delete('/discount/name/:productName', async (req, res) => {
+    try {
+        const productName = req.params.productName;
+
+       // Use the findOneAndDelete method to delete the product by name
+        const result = await Discount.findOneAndDelete({ name: productName });
+
+        if (result) {
+            res.json({ message: 'Discount deleted successfully' });
+        } else {
+            res.status(404).json({ error: 'Discount not found' });
+        }
+    } catch (error) {
+        console.error(error);  
+        res.status(500).json({ error: 'Error at deleting discount' });
+    }
+});
+//curl -X DELETE http://localhost:8000/products/name/bread 
+
+// Path to get all products
+app.get('/discount', async (req, res) => {
+    try {
+        const discount = await Discount.find({});
+
+        res.json(discount); // Returns the products in JSON format
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching discount' });
+    }
+});
+//curl http://localhost:8000/products
+
+// route to get the current values of a product by name
+app.get('/discount/name/:productName', async (req, res) => {
+    try {
+        const productName = req.params.productName;
+       
+        const discount = await Discount.findOne({ name: productName });
+
+        if (discount) {
+            res.json(discount);
+        } else {
+            res.status(404).json({ error: 'Discount not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching discount' });
+    }
+});
+//curl http://localhost:8000/products/name/apple 
+
+// route to update a product by name
+app.put('/discount/name/:productName', async (req, res) => {
+    try {
+        const productName = req.params.productName;
+        const { newDiscountNum, newDate } = req.body;
+
+        const result = await Discount.findOneAndUpdate(
+            { name: productName },
+            { $set: { discount: newDiscountNum, date: newDate } },
+            { new: true } // Returns the updated document
+        );
+
+        if (result) {
+            res.json(result);
+        } else {
+            res.status(404).json({ error: 'Discount not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error at updating Discount' });
+    }
+});
+//curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple   
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
@@ -214,4 +309,13 @@ app.get('/login', function(req, res){
 app.get('/business', function(req, res){
     console.log("business page");
     res.sendFile(__dirname + "/Views/html/business.html");
+})
+
+app.get('/sales', function(req, res){
+    console.log("sales page");
+    res.sendFile(__dirname + "/Views/html/sales.html");
+})
+app.get('/service', function(req, res){
+    console.log("service page");
+    res.sendFile(__dirname + "/Views/html/service.html");
 })

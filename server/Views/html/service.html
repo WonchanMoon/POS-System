@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POS</title>
+    <meta name="description" content="POS Service" />
+    <meta name="author" content="JaeMyeong" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+    <link rel="icon" type="image/png" href="../imgs/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../lib/service_style.css" />
+    <script src="../lib/service.js" defer></script>
+  </head>
+  <body>
+    <!-- Logo -->
+    <div id="logo_box">
+      <img style="width: 100%" src="./imgs/logo.png" />
+    </div>
+
+    <!-- Header -->
+    <div id="header">
+      <div class="header__info">
+        <div class="header__info_text">
+          <div class="info-row">
+            <div class="info-row-item">
+              · 매장명 :&nbsp;
+              <span id="shop-name">한양 왕십리1호점</span>
+            </div>
+            <div class="info-row-item">
+              · 영업일자 :&nbsp;
+              <span id="small-time" style="color: rgb(255, 166, 0)"
+                >2023-11-29 (수)</span
+              >
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-row-item">
+              · 판매원 :&nbsp;<span id="user-name">김재명</span>
+            </div>
+            <div class="info-row-item">
+              · 통신상태 :&nbsp;
+              <div
+                id="status-color"
+                style="background-color: rgb(127, 219, 127)"
+              ></div>
+              <span id="status-txt">&nbsp;정상</span>
+            </div>
+          </div>
+        </div>
+        <div class="header__info_clock">
+          <p id="big-time" style="color: rgb(255, 166, 0)"></p>
+        </div>
+      </div>
+      <button class="header__exit-btn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="50"
+          width="50"
+          viewBox="0 0 384 512"
+        >
+          <path
+            fill="#ffffff"
+            d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+          />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div id="contents">
+      <div class="left_column">
+        <section>
+          <div id="table-box">
+            <table id="productTable" class="product-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px">No.</th>
+                  <th>상품명</th>
+                  <th>단가</th>
+                  <th>수량</th>
+                  <th>할인</th>
+                  <th>금액</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 상품 목록은 여기에 추가됩니다 -->
+                <tr>
+                  <th>1</th>
+                  <td>상품 1</td>
+                  <td>3000</td>
+                  <td>3</td>
+                  <td>20%</td>
+                  <td>7200</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section>
+          <div class="control-panel">
+            <button onclick="removeAllProducts()">전체<br />취소</button>
+            <button onclick="removeSelectedProduct()">선택<br />취소</button
+            ><button onclick="decreaseQuantity()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="30"
+                width="30"
+                viewBox="0 0 448 512"
+              >
+                <path
+                  fill="#000000"
+                  d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"
+                />
+              </svg>
+            </button>
+            <button onclick="increaseQuantity()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="30"
+                width="30"
+                viewBox="0 0 448 512"
+              >
+                <path
+                  fill="#000000"
+                  d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                />
+              </svg>
+            </button>
+            <button onclick="selectPreviousProduct()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="30"
+                width="30"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  fill="#000000"
+                  d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"
+                />
+              </svg>
+            </button>
+            <button onclick="selectNextProduct()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="30"
+                width="30"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  fill="#000000"
+                  d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="summary-panel">
+            <div class="amount-summary">
+              <div class="summary-row">
+                <div>총&nbsp;&nbsp;금&nbsp;&nbsp;액</div>
+                <span id="totalAmount">0</span>
+              </div>
+              <hr />
+              <div class="summary-row">
+                <div>할인금액</div>
+                <span id="discountAmount">0</span>
+              </div>
+              <hr />
+              <div class="summary-row">
+                <div style="color: orange">받을금액</div>
+                <span id="dueAmount">0</span>
+              </div>
+              <hr />
+              <div class="summary-row">
+                <div>받은금액</div>
+                <span id="receivedAmount">0</span>
+              </div>
+              <hr />
+              <div class="summary-row">
+                <div style="color: orange">거스름돈</div>
+                <span id="changeAmount">0</span>
+              </div>
+            </div>
+            <div class="number_pad">
+              <div class="number_display"></div>
+              <div class="number_key">
+                <div class="key_row">
+                  <button onclick="pressKey('7')">7</button>
+                  <button onclick="pressKey('8')">8</button>
+                  <button onclick="pressKey('9')">9</button>
+                </div>
+                <div class="key_row">
+                  <button onclick="pressKey('4')">4</button>
+                  <button onclick="pressKey('5')">5</button>
+                  <button onclick="pressKey('6')">6</button>
+                </div>
+                <div class="key_row">
+                  <button onclick="pressKey('1')">1</button>
+                  <button onclick="pressKey('2')">2</button>
+                  <button onclick="pressKey('3')">3</button>
+                </div>
+                <div class="key_row">
+                  <button onclick="pressKey('0')">0</button>
+                  <button onclick="pressKey('00')">00</button>
+                  <button onclick="clearReceivedAmount()">C</button>
+                </div>
+                <div class="key_row">
+                  <button onclick="deleteLastDigit()"><</button>
+                  <button onclick="enterReceivedAmount()" style="width: 65%">
+                    ENTER
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="right_column">
+        <div class="goods">
+          <div class="product-catalog">
+            <!-- 상품 목록은 여기에 동적으로 로드됩니다 -->
+          </div>
+        </div>
+        <div class="btns">
+          <button>결제</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

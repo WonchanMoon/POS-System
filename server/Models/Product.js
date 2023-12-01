@@ -3,7 +3,6 @@ const mongoose = require('mongoose'); // mongoose 선언
 const productSchema = mongoose.Schema({  // schema 작성
   ID: {
     type: String,
-    maxLength: 10,
     trim: true, // space 없애줌
     unique: 1, // 유일
     // required: true,
@@ -21,11 +20,6 @@ const productSchema = mongoose.Schema({  // schema 작성
   counts: {
     type: Number,
     required: true,
-  },
-  event: {
-    type: String,
-    maxLength: 50,
-    default: "",
   },
   category: {
     type: String,
