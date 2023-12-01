@@ -35,33 +35,38 @@ function signUp() {
   } else {
     $.ajax({
     type: 'POST', 
-    url: '/register', 
+    url: '/register',
+    async: false, // 동기
     data: {"ID": id, "password": password, "name": name, 
-            "role": role, "storeNmae": storeName}
+            "role": role, "storeName": storeName}, dataType: "json"
     }).done((result)=>{
-      console.log(result);
-      console.log(result.message);
       alert('등록 성공!\nName: ' + name + '\nID: ' + id + 
-            '\nRole: ' + role + '\nStore name: ' + storeName);
-    })
-  }
-}
-
-function signUp() {
-  var id = document.querySelector('.sign-up-container input[placeholder="ID"]').value;
-  var password = document.querySelector('.sign-up-container input[placeholder="Password"]').value;
-
-  if (!id || !password) {
-    alert('모든 빈칸을 채워주세요.');
-  } else {
-    $.ajax({
-    type: 'POST', 
-    url: '/login', 
-    data: {"ID": id, "password": password}
-    }).done((result)=>{
+      '\nRole: ' + role + '\nStore name: ' + storeName);
       console.log(result);
       console.log(result.message);
-      alert('로그인 성공!');
+    }).fail(()=>{
+      alert('중복된 ID가 존재합니다.');
+      console.log('ID already in use');
     })
+
   }
 }
+
+// function signUp() {
+//   var id = document.querySelector('.sign-up-container input[placeholder="ID"]').value;
+//   var password = document.querySelector('.sign-up-container input[placeholder="Password"]').value;
+
+//   if (!id || !password) {
+//     alert('모든 빈칸을 채워주세요.');
+//   } else {
+//     $.ajax({
+//     type: 'POST', 
+//     url: '/login', 
+//     data: {"ID": id, "password": password}
+//     }).done((result)=>{
+//       console.log(result);
+//       console.log(result.message);
+//       alert('로그인 성공!');
+//     })
+//   }
+// }

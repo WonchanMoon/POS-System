@@ -3,25 +3,32 @@ const mongoose = require('mongoose'); // mongoose 선언
 const salesSchema = mongoose.Schema({  // schema 작성
   ID: {
     type: String,
-    maxLength: 10,
     trim: true, // space 없애줌
     unique: 1, // 유일
+    required: true,
   },
   name: {
     type: String,
     maxLength: 20,
+    required: true,
+    trim: true,
   },
   price: {
     type: Number,
-    default: 0, // 값이 정해지지 않았다면 디폴트 0
+    required: true,
   },
   counts: {
     type: Number,
-    default: 0, // 값이 정해지지 않았다면 디폴트 0
+    required: true,
   },
   date: {
+    type: Date,
+    default: Date.now, // 추가 시점
+    expires:60*60*24*90, // 30일 기한
+    required: true,
+  },
+  data: {
     type: String,
-    maxLength: 50,
   }
 });
 

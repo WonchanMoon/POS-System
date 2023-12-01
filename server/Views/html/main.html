@@ -3,12 +3,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../lib/main.css" type="text/css">
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 
 <body>
   <div class="container" id="container">
     <div class="form-container sign-up-container">
-      <form action="/register" method="post">
+      <form>
         <h2>Create Account</h2>
         <div class="social-container"></div>
         <input type="text" placeholder="StoreName"/>
@@ -22,7 +23,6 @@
           <button type="button" onclick="selectRole('Manager')" id="ManagerButton">Manager</button>
           </p>
         </div>
-
         <button type="register" onclick="signUp()">Sign Up</button>
       </form>
     </div>
@@ -53,8 +53,6 @@
 </body>
 
 <!-- server.js라는 javascript파일을 연결 -->
-<script src="../../server.js"></script>
 <script src="../lib/main.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 
 </html>
