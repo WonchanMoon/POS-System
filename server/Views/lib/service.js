@@ -346,11 +346,12 @@ function sendPaymentData() {
   }
 
   console.log(data);
+  let final = { data: data };
   $.ajax({
     url: '/salesList',
     type: 'POST',
     contentType: 'application/json',
-    data: data,
+    data: JSON.stringify(final),
     success: function (response) {
       console.log('Payment successful:', response);
     },
