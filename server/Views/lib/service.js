@@ -305,28 +305,29 @@ function loadProducts() {
       });
     }
     console.log(result1);
-    setTimeout(function () {}, 2000);
-    products = result1;
+    setTimeout(function () {
+      products = result1;
 
-    var productCatalog = document.querySelector('.product-catalog');
-    products.forEach(function (product) {
-      var productButton = document.createElement('button');
-      productButton.className = 'product-item';
-      productButton.innerHTML =
-        product.name +
-        '<br>' +
-        product.price +
-        '원<br>' +
-        (Number(product.discount) > 0
-          ? '할인율: ' + product.discount + '%'
-          : '할인 없음');
+      var productCatalog = document.querySelector('.product-catalog');
+      products.forEach(function (product) {
+        var productButton = document.createElement('button');
+        productButton.className = 'product-item';
+        productButton.innerHTML =
+          product.name +
+          '<br>' +
+          product.price +
+          '원<br>' +
+          (Number(product.discount) > 0
+            ? '할인율: ' + product.discount + '%'
+            : '할인 없음');
 
-      productButton.onclick = function () {
-        addProduct(product.name, product.price, 1, product.discount);
-        updateAmounts();
-      };
-      productCatalog.appendChild(productButton);
-    });
+        productButton.onclick = function () {
+          addProduct(product.name, product.price, 1, product.discount);
+          updateAmounts();
+        };
+        productCatalog.appendChild(productButton);
+      });
+    }, 2000);
   });
 }
 
