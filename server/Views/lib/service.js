@@ -320,7 +320,7 @@ function loadProducts() {
         '<br>' +
         product.price +
         '원<br>' +
-        (product.discount > 0
+        (Number(product.discount) > 0
           ? '할인율: ' + product.discount + '%'
           : '할인 없음');
 
