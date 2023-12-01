@@ -293,9 +293,19 @@ function loadProducts() {
         url: '/discount/name/' + result1[i].name,
         data: {},
         dataType: 'json',
-      }).done((result2) => {
-        console.log(result2);
-        result1[i].discount = result2.discount;
+        success: function (result2) {
+          console.log(result2);
+          console.log(result2.discount);
+          result1[i].discount = result2.discount;
+        },
+        error: function (error) {
+          console.error(
+            'Error fetching discount for',
+            result1[i].name,
+            ':',
+            error
+          );
+        },
       });
     }
 
