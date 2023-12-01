@@ -170,11 +170,10 @@
 </head>
 <body class="bg-light">
     <header>
-        <h1>매출 현황</h1>
+        <img src="../imgs/logo.png" width = "400"/>
     </header>
     <nav>
       <ul>
-        <li><a href="/">메인</a></li>
         <li><a href="/service">판매 관리</a></li>
         <li><a href="/sales">매출 현황</a></li>
         <li><a href="/business">영업 관리</a></li>
@@ -255,7 +254,6 @@
         }
         
         // 차트를 그리는 JavaScript 코드
-        console.log(G_List);
         const resultObject = {};
 
         G_List.forEach(item => {
@@ -275,8 +273,6 @@
         const namesArray = sortedResultArray.map(([name, total]) => name);
         const totalPricesArray = sortedResultArray.map(([name, total]) => total);
 
-        console.log("Names:", namesArray);
-        console.log("Total Prices:", totalPricesArray);
         var ctx = document.getElementById('salesChart').getContext('2d');
         var salesChart = new Chart(ctx, {
             type: 'doughnut', // 원형 차트 설정
