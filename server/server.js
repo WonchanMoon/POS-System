@@ -74,48 +74,48 @@ app.post('/register', async (req, res) => {
 
 // Path to login
 app.post('/login', async (req, res) => {
-    try {
-        if(globalID){
-            console.log("session exists");
-            res.status(200).json({ messagee: 'login success' });
-        } else {
-            const { ID, password } = req.body;
-            // Search the user by ID
-            const user = await User.findOne({ ID });
-            // Check if the user exists and the password is correct
-            if (user && (await bcrypt.compare(password, user.password))) {
-                globalID = user.ID;
-                res.status(200).json({ messagee: 'login success' });
-            } else {
-                res.status(401).json({ error: 'Incorrect credentials' });
-            }
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to login' });
+  try {
+    if (globalID) {
+      console.log('session exists');
+      res.status(200).json({ messagee: 'login success' });
+    } else {
+      const { ID, password } = req.body;
+      // Search the user by ID
+      const user = await User.findOne({ ID });
+      // Check if the user exists and the password is correct
+      if (user && (await bcrypt.compare(password, user.password))) {
+        globalID = user.ID;
+        res.status(200).json({ messagee: 'login success' });
+      } else {
+        res.status(401).json({ error: 'Incorrect credentials' });
+      }
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to login' });
+  }
 });
 
 //get users
 app.get('/users', async (req, res) => {
-    try {
-        const user = await User.find({});
-        res.json(user); // Returns the products in JSON format
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error fetching users' });
-    }
+  try {
+    const user = await User.find({});
+    res.json(user); // Returns the products in JSON format
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching users' });
+  }
 });
 
 app.get('/logout', async (req, res) => {
-    try {
-        globalID = null;
+  try {
+    globalID = null;
 
-        res.redirect('/login');
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error fetching users' });
-    }
+    res.redirect('/login');
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching users' });
+  }
 });
 
 ///////////////////////
@@ -124,16 +124,16 @@ app.get('/logout', async (req, res) => {
 //////////////////////
 // Path to add a new product
 app.post('/products', async (req, res) => {
-    try {
-        post = Object.assign(req.body, {"ID" : globalID});
-        // Create a new document using the Product model
-        const newProduct = new Product(
-        post
-        // req.body   
-        );
-        
-        // Save the new product to the database
-        const result = await newProduct.save();
+  try {
+    post = Object.assign(req.body, { ID: globalID });
+    // Create a new document using the Product model
+    const newProduct = new Product(
+      post
+      // req.body
+    );
+
+    // Save the new product to the database
+    const result = await newProduct.save();
 
     res.json(result); // Return the result as JSON
   } catch (error) {
@@ -146,24 +146,27 @@ app.delete('/products/name/:productName', async (req, res) => {
   try {
     const productName = req.params.productName;
 
-       // Use the findOneAndDelete method to delete the product by name
-        const result = await Product.findOneAndDelete({ID : globalID, name: productName });
-        if (result) {
-            res.json({ message: 'Product deleted successfully' });
-        } else {
-            res.status(404).json({ error: 'Product not found' });
-        }
-    } catch (error) {
-        console.error(error);  
-        res.status(500).json({ error: 'Error at deleting product' });
+    // Use the findOneAndDelete method to delete the product by name
+    const result = await Product.findOneAndDelete({
+      ID: globalID,
+      name: productName,
+    });
+    if (result) {
+      res.json({ message: 'Product deleted successfully' });
+    } else {
+      res.status(404).json({ error: 'Product not found' });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error at deleting product' });
+  }
 });
 //curl -X DELETE http://localhost:8000/products/name/bread
 
 // Path to get all products
 app.get('/products', async (req, res) => {
-    try {
-        const products = await Product.find({ID : globalID});
+  try {
+    const products = await Product.find({ ID: globalID });
 
     res.json(products); // Returns the products in JSON format
   } catch (error) {
@@ -175,10 +178,10 @@ app.get('/products', async (req, res) => {
 
 // route to get the current values of a product by name
 app.get('/products/name/:productName', async (req, res) => {
-    try {
-        const productName = req.params.productName;
-       
-        const product = await Product.findOne({ ID : globalID, name: productName });
+  try {
+    const productName = req.params.productName;
+
+    const product = await Product.findOne({ ID: globalID, name: productName });
 
     if (product) {
       res.json(product);
@@ -198,11 +201,11 @@ app.put('/products/name/:productName', async (req, res) => {
     const productName = req.params.productName;
     const { newName, newPrice, newCounts } = req.body;
 
-        const result = await Product.findOneAndUpdate(
-            { ID : globalID, name: productName },
-            { $set: { name: newName, price: newPrice, counts: newCounts } },
-            { new: true } // Returns the updated document
-        );
+    const result = await Product.findOneAndUpdate(
+      { ID: globalID, name: productName },
+      { $set: { name: newName, price: newPrice, counts: newCounts } },
+      { new: true } // Returns the updated document
+    );
 
     if (result) {
       res.json(result);
@@ -218,15 +221,15 @@ app.put('/products/name/:productName', async (req, res) => {
 
 // Path to add a new discount
 app.post('/discount', async (req, res) => {
-    post = Object.assign(req.body, {"ID" : globalID});
-    try {
-        // Create a new document using the Product model
-        const newDiscount = new Discount(
-        // req.body
-        post
-        );
-        // Save the new product to the database
-        const result = await newDiscount.save();
+  post = Object.assign(req.body, { ID: globalID });
+  try {
+    // Create a new document using the Product model
+    const newDiscount = new Discount(
+      // req.body
+      post
+    );
+    // Save the new product to the database
+    const result = await newDiscount.save();
 
     res.json(result); // Return the result as JSON
   } catch (error) {
@@ -236,11 +239,14 @@ app.post('/discount', async (req, res) => {
 //curl -X POST -H "Content-Type: application/json" -d '{"name": "고기", "price": 5000}' http://localhost:8000/products
 
 app.delete('/discount/name/:name', async (req, res) => {
-    try {
-        const name = req.params.name;
+  try {
+    const name = req.params.name;
 
-       // Use the findOneAndDelete method to delete the product by name
-        const result = await Discount.findOneAndDelete({ ID:globalID, name : name});
+    // Use the findOneAndDelete method to delete the product by name
+    const result = await Discount.findOneAndDelete({
+      ID: globalID,
+      name: name,
+    });
 
     if (result) {
       res.json({ message: 'Discount deleted successfully' });
@@ -256,8 +262,8 @@ app.delete('/discount/name/:name', async (req, res) => {
 
 // Path to get all products
 app.get('/discount', async (req, res) => {
-    try {
-        const discount = await Discount.find({ID:globalID});
+  try {
+    const discount = await Discount.find({ ID: globalID });
 
     res.json(discount); // Returns the products in JSON format
   } catch (error) {
@@ -269,10 +275,13 @@ app.get('/discount', async (req, res) => {
 
 // route to get the current values of a product by name
 app.get('/discount/name/:productName', async (req, res) => {
-    try {
-        const productName = req.params.productName;
-       
-        const discount = await Discount.findOne({ ID:globalID, name: productName });
+  try {
+    const productName = req.params.productName;
+
+    const discount = await Discount.findOne({
+      ID: globalID,
+      name: productName,
+    });
 
     if (discount) {
       res.json(discount);
@@ -292,11 +301,11 @@ app.put('/discount/name/:productName', async (req, res) => {
     const productName = req.params.productName;
     const { newDiscountNum, newDate } = req.body;
 
-        const result = await Discount.findOneAndUpdate(
-            { ID:globalID, name: productName },
-            { $set: { discount: newDiscountNum, date: newDate } },
-            { new: true } // Returns the updated document
-        );
+    const result = await Discount.findOneAndUpdate(
+      { ID: globalID, name: productName },
+      { $set: { discount: newDiscountNum, date: newDate } },
+      { new: true } // Returns the updated document
+    );
 
     if (result) {
       res.json(result);
@@ -320,34 +329,34 @@ app.put('/discount/name/:productName', async (req, res) => {
 ///////////////////////////////////////////
 // Path to add a new sales
 app.post('/salesList', async (req, res) => {
-    try {
-        // Create a new document using the Product model
-        post = Object.assign(req.body, {"ID" : globalID});
-        const newSales = new Sales(
-        // req.body
-        post
-        );
-        console.log(req.body);
-        // Save the new product to the database
-        const result = await newSales.save();
+  try {
+    // Create a new document using the Product model
+    post = Object.assign(req.body, { ID: globalID });
+    const newSales = new Sales(
+      // req.body
+      post
+    );
+    console.log(req.body);
+    // Save the new product to the database
+    const result = await newSales.save();
 
     res.json(result); // Return the result as JSON
   } catch (error) {
     res.status(500).json({ error: 'Error the sales could not be added' });
   }
 });
-//curl -X POST -H "Content-Type: application/json" -d '{"name": "고기", "price": 5000}' http://localhost:8000/products 
+//curl -X POST -H "Content-Type: application/json" -d '{"name": "고기", "price": 5000}' http://localhost:8000/products
 
 // Path to get all products
 app.get('/salesList', async (req, res) => {
-    try {
-        const sales = await Sales.find({ID : globalID});
+  try {
+    const sales = await Sales.find({ ID: globalID });
 
-        res.json(sales); // Returns the products in JSON format
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error fetching sales' });
-    }
+    res.json(sales); // Returns the products in JSON format
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error fetching sales' });
+  }
 });
 //curl http://localhost:8000/products
 
@@ -396,23 +405,22 @@ app.put('/discount/name/:productName', async (req, res) => {
     const productName = req.params.productName;
     const { newDiscountNum, newDate } = req.body;
 
-        const result = await Discount.findOneAndUpdate(
-            { name: productName },
-            { $set: { discount: newDiscountNum, date: newDate } },
-            { new: true } // Returns the updated document
-        );
-        if (result) {
-            res.json(result);
-        } else {
-            res.status(404).json({ error: 'Discount not found' });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error at updating Discount' });
+    const result = await Discount.findOneAndUpdate(
+      { name: productName },
+      { $set: { discount: newDiscountNum, date: newDate } },
+      { new: true } // Returns the updated document
+    );
+    if (result) {
+      res.json(result);
+    } else {
+      res.status(404).json({ error: 'Discount not found' });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error at updating Discount' });
+  }
 });
-//curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple   
-
+//curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple
 
 // Start the server
 app.listen(port, () => {
@@ -422,46 +430,46 @@ console.log('Using collection:', Product.collection.name);
 
 // Views
 
-app.get('/', function(req, res){
-    console.log("index page");
-    if(!globalID) {
-        res.sendFile(__dirname + "/Views/html/main.html");
-    } else {
-        res.redirect('/login');
-    }
-})
+app.get('/', function (req, res) {
+  console.log('index page');
+  if (!globalID) {
+    res.sendFile(__dirname + '/Views/html/main.html');
+  } else {
+    res.redirect('/login');
+  }
+});
 
-app.get('/login', function(req, res){
-    console.log("index page");
-    if(!globalID) {
-        res.sendFile(__dirname + "/Views/html/main.html");
-    } else {
-        res.redirect('/business');
-    }
-})
+app.get('/login', function (req, res) {
+  console.log('index page');
+  if (!globalID) {
+    res.sendFile(__dirname + '/Views/html/main.html');
+  } else {
+    res.redirect('/business');
+  }
+});
 
-app.get('/business', function(req, res){
-    console.log("business page");
-    if(globalID){
-        res.sendFile(__dirname + "/Views/html/business.html");
-    } else{
-        res.status(400).json();
-    }
-})
+app.get('/business', function (req, res) {
+  console.log('business page');
+  if (globalID) {
+    res.sendFile(__dirname + '/Views/html/business.html');
+  } else {
+    res.status(400).json();
+  }
+});
 
-app.get('/sales', function(req, res){
-    console.log("sales page");
-    if(globalID){
-    res.sendFile(__dirname + "/Views/html/sales1.html");
-    } else{
-        res.status(400).json();
-    }
-})
-app.get('/service', function(req, res){
-    console.log("service page");
-    if(globalID){
-        res.sendFile(__dirname + "/Views/html/service.html");
-    } else{
-        res.status(400).json();
-    }
-})
+app.get('/sales', function (req, res) {
+  console.log('sales page');
+  if (globalID) {
+    res.sendFile(__dirname + '/Views/html/sales1.html');
+  } else {
+    res.status(400).json();
+  }
+});
+app.get('/service', function (req, res) {
+  console.log('service page');
+  if (globalID) {
+    res.sendFile(__dirname + '/Views/html/service.html');
+  } else {
+    res.status(400).json();
+  }
+});
