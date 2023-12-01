@@ -290,7 +290,15 @@
                 responsive: false,
             }
         });
-
+    window.addEventListener('beforeunload', function (event) {
+      $.ajax({
+      type: 'GET',
+      url: '/logout',
+      data: {
+      },
+      dataType: "json"
+      })
+    });
     </script>
 
 </body>
