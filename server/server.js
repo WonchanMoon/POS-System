@@ -492,9 +492,7 @@ console.log('Using collection:', Product.collection.name);
 // Views
 
 app.get('/', function (req, res) {
-  console.log(jwt.verify(req.cookies.token, secret_key));
   res.redirect('/login');
-  
 });
 
 app.get('/login', function (req, res) {
