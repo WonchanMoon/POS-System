@@ -111,7 +111,7 @@ app.post('/login', async (req, res) => {
 //get users
 app.get('/users', async (req, res) => {
   try {
-    const user = await User.find({});
+    const user = await User.findOne({ ID: jwt.verify(req.cookies.token, secret_key).ID });
     res.json(user); // Returns the products in JSON format
   } catch (error) {
     console.error(error);

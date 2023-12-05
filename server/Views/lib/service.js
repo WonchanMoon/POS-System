@@ -391,3 +391,15 @@ window.onload = function () {
   addClickEventToRows();
   updateAmounts();
 };
+
+// 매장명, 판매원 불러오기
+$.ajax({
+  type: 'GET',
+  url: '/users',
+  data: {},
+  dataType: 'json',
+}).done((result) => {
+  // console.log(result);
+  document.getElementById('shop-name').innerText = result.storeName;
+  document.getElementById('user-name').innerText = result.name;
+})
