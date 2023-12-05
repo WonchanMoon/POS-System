@@ -561,6 +561,7 @@
           type: 'GET',
           url: '/products',
           data: {},
+          async: false,
           dataType: 'json',
         }).done((result) => {
           const start = (page - 1) * itemsPerPage;

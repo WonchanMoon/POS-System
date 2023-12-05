@@ -271,7 +271,15 @@
             }); // 병합
           }
         }
+        dataToShow.sort(sortByDate);
         return dataToShow;
+      }
+
+      // 날짜를 가진 객체의 배열을 날짜에 따라 정렬하는 함수
+      function sortByDate(a, b) {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateB - dateA;
       }
 
       // 차트를 그리는 JavaScript 코드

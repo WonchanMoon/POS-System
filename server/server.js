@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
-const moment = require('moment')
+const moment = require('moment');
+const cookieParser = require('cookie-parser');
 
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
@@ -13,11 +14,13 @@ moment.tz.setDefault("Asia/Seoul");
 const dateNow = moment().format('YYYY-MM-DD HH:mm:ss')
 const app = express();
 const port = process.env.PORT;
+const secret_key = process.env.SECRET_KEY
 const saltRounds = 10;
-var globalID = null;
+// var globalID = null;
 
 // Middleware to parse the body of requests in JSON format
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use(express.urlencoded({ extended: true })); // application/x-www-form-urlencode
 app.use(express.json()); // application/json
@@ -46,6 +49,7 @@ const { Product } = require('./Models/Product'); // importing product
 const { User } = require('./Models/User'); //importing user
 const { Discount } = require('./Models/Discount'); //importing discount
 const { Sales } = require('./Models/Sales'); //importing sales
+const { error } = require('console');
 
 app.post('/register', async (req, res) => {
   try {
@@ -80,21 +84,24 @@ app.post('/register', async (req, res) => {
 // Path to login
 app.post('/login', async (req, res) => {
   try {
-    if (globalID) {
-      console.log('session exists');
-      res.status(200).json({ messagee: 'login success' });
-    } else {
+    // if (verifyToken(req,res)) {
+    //   console.log('jwt exists');
+    //   return res.status(200).json({ message: 'login success' });
+    // } else {
       const { ID, password } = req.body;
       // Search the user by ID
       const user = await User.findOne({ ID });
       // Check if the user exists and the password is correct
       if (user && (await bcrypt.compare(password, user.password))) {
-        globalID = user.ID;
-        res.status(200).json({ messagee: 'login success' });
+        // globalID = user.ID;
+        const token = jwt.sign({ ID: ID }, secret_key, {
+          expiresIn: "12h",
+        });
+        return res.status(200).cookie("token", token, { httpOnly: true }).json({message: 'login success'})
       } else {
         res.status(401).json({ error: 'Incorrect credentials' });
       }
-    }
+    // }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to login' });
@@ -114,23 +121,48 @@ app.get('/users', async (req, res) => {
 
 app.get('/logout', async (req, res) => {
   try {
-    globalID = null;
-
-    res.redirect('/login');
+    // globalID = null;
+    
+    // 쿠키 삭제
+    res.clearCookie('token').redirect('/login');
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error fetching users' });
   }
 });
 
-///////////////////////
+async function verifyToken(req, res){
+  const token = req.cookies.token;
+  if (!token) {
+    // return next(createError(401, "토큰이 없습니다."));
+    console.log("토큰이 없습니다.");
+    return false;
+  }
+  
+  try{
+    console.log(jwt.verify(token, secret_key));
+    console.log("유효한 토큰입니다.");
+    return true;
+  }
+  catch (error){
+    console.log("유효하지 않은 토큰입니다.");
+    return false;
+  }
+  
+};
+
 //////////////////////
-//product
+//////////////////////
+//////////////////////
+//product/////////////
+//////////////////////
+//////////////////////
 //////////////////////
 // Path to add a new product
 app.post('/products', async (req, res) => {
   try {
-    post = Object.assign(req.body, { ID: globalID });
+    console.log(req.body);
+    post = Object.assign(req.body, { ID: jwt.verify(req.cookies.token, secret_key).ID});
     // Create a new document using the Product model
     const newProduct = new Product(
       post
@@ -153,7 +185,7 @@ app.delete('/products/name/:productName', async (req, res) => {
 
     // Use the findOneAndDelete method to delete the product by name
     const result = await Product.findOneAndDelete({
-      ID: globalID,
+      ID: jwt.verify(req.cookies.token, secret_key).ID,
       name: productName,
     });
     if (result) {
@@ -171,8 +203,7 @@ app.delete('/products/name/:productName', async (req, res) => {
 // Path to get all products
 app.get('/products', async (req, res) => {
   try {
-    const products = await Product.find({ ID: globalID });
-
+    const products = await Product.find({ ID: jwt.verify(req.cookies.token, secret_key).ID });
     res.json(products); // Returns the products in JSON format
   } catch (error) {
     console.error(error);
@@ -186,7 +217,7 @@ app.get('/products/name/:productName', async (req, res) => {
   try {
     const productName = req.params.productName;
 
-    const product = await Product.findOne({ ID: globalID, name: productName });
+    const product = await Product.findOne({ ID: jwt.verify(req.cookies.token, secret_key).ID, name: productName });
 
     if (product) {
       res.json(product);
@@ -207,7 +238,7 @@ app.put('/products/name/:productName', async (req, res) => {
     const { newName, newPrice, newCounts } = req.body;
 
     const result = await Product.findOneAndUpdate(
-      { ID: globalID, name: productName },
+      { ID: jwt.verify(req.cookies.token, secret_key).ID, name: productName },
       { $set: { name: newName, price: newPrice, counts: newCounts } },
       { new: true } // Returns the updated document
     );
@@ -229,11 +260,10 @@ app.put('/products/counts/:productName', async (req, res) => {
     // const productName = req.params.productName;
     const { name, counts } = req.body;
 
-    const product = await Product.findOne({ ID: globalID, name: name });
+    const product = await Product.findOne({ ID: jwt.verify(req.cookies.token, secret_key).ID, name: name });
     var ncounts = product.counts;
-    console.log(ncounts);
     const result = await Product.findOneAndUpdate(
-      { ID: globalID, name: name },
+      { ID: jwt.verify(req.cookies.token, secret_key).ID, name: name },
       { $set: {counts: (ncounts-counts) } },
       { new: true } // Returns the updated document
     );
@@ -253,7 +283,7 @@ app.put('/products/counts/:productName', async (req, res) => {
 
 // Path to add a new discount
 app.post('/discount', async (req, res) => {
-  post = Object.assign(req.body, { ID: globalID });
+  post = Object.assign(req.body, { ID: jwt.verify(req.cookies.token, secret_key).ID });
   try {
     // Create a new document using the Product model
     const newDiscount = new Discount(
@@ -276,7 +306,7 @@ app.delete('/discount/name/:name', async (req, res) => {
 
     // Use the findOneAndDelete method to delete the product by name
     const result = await Discount.findOneAndDelete({
-      ID: globalID,
+      ID: jwt.verify(req.cookies.token, secret_key).ID,
       name: name,
     });
 
@@ -295,7 +325,7 @@ app.delete('/discount/name/:name', async (req, res) => {
 // Path to get all products
 app.get('/discount', async (req, res) => {
   try {
-    const discount = await Discount.find({ ID: globalID });
+    const discount = await Discount.find({ ID: jwt.verify(req.cookies.token, secret_key).ID });
 
     res.json(discount); // Returns the products in JSON format
   } catch (error) {
@@ -311,7 +341,7 @@ app.get('/discount/name/:productName', async (req, res) => {
     const productName = req.params.productName;
 
     const discount = await Discount.findOne({
-      ID: globalID,
+      ID: jwt.verify(req.cookies.token, secret_key).ID,
       name: productName,
     });
 
@@ -334,7 +364,7 @@ app.put('/discount/name/:productName', async (req, res) => {
     const { newDiscountNum, newDate } = req.body;
 
     const result = await Discount.findOneAndUpdate(
-      { ID: globalID, name: productName },
+      { ID: jwt.verify(req.cookies.token, secret_key).ID, name: productName },
       { $set: { discount: newDiscountNum, date: newDate } },
       { new: true } // Returns the updated document
     );
@@ -363,12 +393,11 @@ app.put('/discount/name/:productName', async (req, res) => {
 app.post('/salesList', async (req, res) => {
   try {
     // Create a new document using the Product model
-    post = Object.assign(req.body, {ID: globalID , date : dateNow});
+    post = Object.assign(req.body, {ID: jwt.verify(req.cookies.token, secret_key).ID, date : dateNow});
     const newSales = new Sales(
       // req.body
       post
     );
-    console.log(req.body);
     // Save the new product to the database
     const result = await newSales.save();
 
@@ -382,7 +411,7 @@ app.post('/salesList', async (req, res) => {
 // Path to get all products
 app.get('/salesList', async (req, res) => {
   try {
-    const sales = await Sales.find({ ID: globalID });
+    const sales = await Sales.find({ ID: jwt.verify(req.cookies.token, secret_key).ID });
 
     res.json(sales); // Returns the products in JSON format
   } catch (error) {
@@ -463,45 +492,51 @@ console.log('Using collection:', Product.collection.name);
 // Views
 
 app.get('/', function (req, res) {
-  console.log('index page');
-  if (!globalID) {
-    res.sendFile(__dirname + '/Views/html/main.html');
-  } else {
-    res.redirect('/login');
-  }
+  console.log(jwt.verify(req.cookies.token, secret_key));
+  res.redirect('/login');
+  
 });
 
 app.get('/login', function (req, res) {
   console.log('index page');
-  if (!globalID) {
-    res.sendFile(__dirname + '/Views/html/main.html');
-  } else {
-    res.redirect('/business');
-  }
+  verifyToken(req,res).then(result => {
+    if(!result){
+      res.sendFile(__dirname + '/Views/html/main.html');
+    } else{
+      res.redirect('/business');
+    }
+  })
 });
 
 app.get('/business', function(req, res){
     console.log("business page");
-    if(globalID){
-        res.sendFile(__dirname + "/Views/html/business.html");
-    } else{
-        res.redirect('/login');
-    }
+    verifyToken(req,res).then(result => {
+      if(result){
+          res.sendFile(__dirname + "/Views/html/business.html");
+      } else{
+          res.redirect('/login');
+      }
+    })
 })
 
 app.get('/sales', function(req, res){
     console.log("sales page");
-    if(globalID){
-    res.sendFile(__dirname + "/Views/html/sales1.html");
-    } else{
-        res.redirect('/login');
-    }
+    verifyToken(req,res).then(result => {
+      if(result){
+        res.sendFile(__dirname + "/Views/html/sales1.html");
+      } else{
+          res.redirect('/login');
+      }
+    })
 })
 app.get('/service', function(req, res){
     console.log("service page");
-    if(globalID){
+    verifyToken(req,res).then(result => {
+      if(result){
         res.sendFile(__dirname + "/Views/html/service.html");
-    } else{
-        res.redirect('/login');
-    }
+      } else{
+          res.redirect('/login');
+      }
+    })
 })
+app.get('/favicon.ico', (req, res) => res.status(204));
