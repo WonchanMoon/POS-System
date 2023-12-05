@@ -441,48 +441,6 @@ app.delete('/salesList/name/:productName', async (req, res) => {
 });
 //curl -X DELETE http://localhost:8000/products/name/bread
 
-// route to get the current values of a product by name
-app.get('/discount/name/:productName', async (req, res) => {
-  try {
-    const productName = req.params.productName;
-
-    const discount = await Discount.findOne({ name: productName });
-
-    if (discount) {
-      res.json(discount);
-    } else {
-      res.status(404).json({ error: 'Discount not found' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error fetching discount' });
-  }
-});
-//curl http://localhost:8000/products/name/apple
-
-// route to update a product by name
-app.put('/discount/name/:productName', async (req, res) => {
-  try {
-    const productName = req.params.productName;
-    const { newDiscountNum, newDate } = req.body;
-
-    const result = await Discount.findOneAndUpdate(
-      { name: productName },
-      { $set: { discount: newDiscountNum, date: newDate } },
-      { new: true } // Returns the updated document
-    );
-    if (result) {
-      res.json(result);
-    } else {
-      res.status(404).json({ error: 'Discount not found' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error at updating Discount' });
-  }
-});
-//curl -X PUT -H "Content-Type: application/json" -d '{"newName": "사과", "newPrice": 1000}' http://localhost:8000/products/name/apple
-
 // Start the server
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
